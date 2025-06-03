@@ -61,6 +61,7 @@ const GameCard: React.FC<GameCardProps> = ({
 
   const validPartners = getValidInteractionPartners(currentPlayer, allPlayers);
   if (question.requiresPartner && validPartners.length === 0) {
+
     return (
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -105,7 +106,8 @@ const GameCard: React.FC<GameCardProps> = ({
       )}
       
       <div className="flex justify-between items-center mt-4">
-        <p className="text-lg font-semibold">Player: {currentPlayer.name} 🎯</p>
+        {currentPlayer.gender==="male"?<p className="text-lg font-semibold rounded-md bg-blue-400 text-white px-4">"{currentPlayer.name}, it’s your turn now!”</p>:
+        <p className="text-lg font-semibold rounded-md bg-pink-400 text-white px-4">"{currentPlayer.name}, it’s your turn now!”</p>}
         {type === 'dare' && timerStarted && (
           <span className="text-lg font-bold">
             {countdown}s ⏱️

@@ -215,7 +215,7 @@ const App: React.FC = () => {
               />
             ) : (
               <>
-                <div className="flex justify-between items-center mb-8">
+                <div className="flex justify-between items-center">
                   {isGameActive ? (
                     <Button
                       onClick={() => setShowStopGameModal(true)}
@@ -244,8 +244,8 @@ const App: React.FC = () => {
 
                 {players.length > 0 ? (
                   <>
-                    <div className="text-center mb-4">
-                      <span className="inline-block px-3 py-1 rounded-full text-sm font-semibold" 
+                    <div className="text-center ">
+                      <span className="inline-block px-3 py-1 mb-4 rounded-full text-sm font-semibold" 
                         style={{
                           backgroundColor: gameLevel === 'Mild' ? '#E5E7EB' : 
                                          gameLevel === 'Hot' ? '#FECACA' : 
@@ -269,26 +269,10 @@ const App: React.FC = () => {
                 
                 <div className="mt-8">
                   
-                  <PlayerList 
-                    players={players} 
-                    addPlayer={addPlayer}
-                    updatePlayer={updatePlayer}
-                    removePlayer={removePlayer}
-                    isGameActive={isGameActive}
-                    currentPlayerIndex={currentPlayerIndex}
-                  />
+
                 </div>
                                     
-                    {!isGameActive && players.length > 1  ? (
-                      <div className="text-center mb-4">
-                        {/* <p className="text-gray-600 mb-6 mt-6">
-                          Click Start to begin the game!
-                        </p> */}
-                        <Button onClick={startGame} color="green" className='mt-5'>
-                          Start Game
-                        </Button>
-                      </div>
-                    ) : gameType && currentQuestion ? (
+                    {!isGameActive && players.length > 1  ? null: gameType && currentQuestion ? (
                       <>
                         <GameCard 
                           type={gameType}
@@ -315,6 +299,24 @@ const App: React.FC = () => {
                         </div>
                       </>
                     ) : null}
+                                      <PlayerList 
+                    players={players} 
+                    addPlayer={addPlayer}
+                    updatePlayer={updatePlayer}
+                    removePlayer={removePlayer}
+                    isGameActive={isGameActive}
+                    currentPlayerIndex={currentPlayerIndex}
+                  />
+                  {!isGameActive && players.length > 1  ? (
+                      <div className="text-center mb-4">
+                        {/* <p className="text-gray-600 mb-6 mt-6">
+                          Click Start to begin the game!
+                        </p> */}
+                        <Button onClick={startGame} color="green" className='mt-5'>
+                          Start Game
+                        </Button>
+                      </div>
+                    ) : null}
               </>
             )}
 
@@ -333,6 +335,7 @@ const App: React.FC = () => {
                   <Button onClick={() => setShowStopGameModal(false)} color="gray">
                     Cancel
                   </Button>
+                  
                   <Button onClick={()=>{stopGame();players.forEach(()=>players.pop());localStorage.setItem('players', JSON.stringify([]));removePlayer(0);}} color="red">
                     Stop Game
                   </Button>

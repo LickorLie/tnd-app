@@ -132,10 +132,10 @@ const PlayerList: React.FC<PlayerListProps> = ({
         <Button
           onClick={() => setShowPlayerModal(true)}
           color="gray"
-          className="flex items-center justify-center"
+          className="flex items-center  justify-center relative  z-10 bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-white/20"
         >
           <Info size={20} className="mr-2" />
-          Player Info
+          Stats
         </Button>
         <PlayerListModal
           isOpen={showPlayerModal}

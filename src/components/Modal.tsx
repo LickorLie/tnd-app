@@ -19,14 +19,14 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black bg-opacity-50"
+          className="fixed -inset-1 bg-black bg-opacity-50 rounded-3xl backdrop-blur-lg"
           onClick={onClose}
         />
         <motion.div
           initial={{ scale: 0.95, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.95, opacity: 0 }}
-          className="bg-white rounded-lg shadow-xl w-full max-w-md relative z-10"
+          className="bg-white/80 rounded-lg shadow-xl w-full max-w-md relative z-10 hover:skew-x-12"
         >
           <div className="flex justify-between items-center p-4 border-b">
             <h2 className="text-lg font-semibold">{title}</h2>

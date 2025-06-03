@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X } from 'lucide-react';
+import { ExternalLink, X } from 'lucide-react';
+import { supabase } from '../utils/supabase';
 
 interface FullscreenAdProps {
   onComplete: () => void;
@@ -9,8 +10,28 @@ interface FullscreenAdProps {
 const FullscreenAd: React.FC<FullscreenAdProps> = ({ onComplete }) => {
   const [timeLeft, setTimeLeft] = useState(10);
   const [isVisible, setIsVisible] = useState(true);
+  const [adData, setAdData] = useState<any>(null);
+  // Fetch ad data from Supabase of  full screen ads
+  useEffect(() => {
+    const fetchAdData = async () => {
+      const { data, error } = await supabase
+        .from('sponsors')
+        .select('*')
+        .eq('is_fullscreen', true)
+        .single();
+
+      if (error) {
+        console.error('Error fetching ad data:', error);
+      } else {
+        setAdData(data);
+      }
+    };
+
+    fetchAdData();
+  }, []);
 
   useEffect(() => {
+
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
@@ -27,7 +48,7 @@ const FullscreenAd: React.FC<FullscreenAdProps> = ({ onComplete }) => {
   }, [onComplete]);
 
   const handleAdClick = () => {
-    window.open('https://example.com/sponsor', '_blank');
+    window.open(adData.link, '_blank');
   };
 
   return (
@@ -54,15 +75,38 @@ const FullscreenAd: React.FC<FullscreenAdProps> = ({ onComplete }) => {
             <div className="relative aspect-video rounded-2xl overflow-hidden bg-gradient-to-br from-purple-600 via-pink-500 to-orange-500">
               {/* Ad Content */}
               <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-8 text-center">
-                <h2 className="text-4xl font-bold mb-4">
-                  🎮 Truth or Dare Premium
-                </h2>
-                <p className="text-xl mb-6">
-                  Unlock exclusive content and spicy challenges!
-                </p>
-                <div className="bg-white/20 backdrop-blur-sm px-6 py-3 rounded-full font-semibold">
-                  Click to Learn More
+{adData && (
+                  <a
+            
+            href={adData.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block group"
+          >
+            <div className="bg-white rounded-xl overflow-hidden shadow-lg transform transition-all duration-300 hover:scale-105">
+              <div className="relative h-48">
+                <img
+                  src={adData.image}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+                  {adData.discount}
                 </div>
+              </div>
+              <div className="p-6">
+                <div className="flex justify-between items-start mb-2">
+                  <h3 className="text-xl font-bold text-gray-900">{adData.title}</h3>
+                  <ExternalLink className="text-purple-500 opacity-0 group-hover:opacity-100 transition-opacity" size={20} />
+                </div>
+                <p className="text-gray-600">{adData.description}</p>
+                <div className="mt-4 flex justify-between items-center">
+                  <span className="text-purple-500 font-semibold">Learn More</span>
+                  <span className="text-sm text-gray-500">Limited Time Offer</span>
+                </div>
+              </div>
+            </div>
+          </a>
+              )}
               </div>
 
               {/* Progress Bar */}
