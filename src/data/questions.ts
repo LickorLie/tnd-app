@@ -57,7 +57,7 @@ let finalQuestions: Questions = {
 };
 
           
-await supabase.from('questions').select().then((response) => {
+supabase.from('questions').select().then((response) => {
   console.log("Response from Supabase:", response.data);
   let data = response.data;
   let questions = {
