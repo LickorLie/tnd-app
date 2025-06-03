@@ -55,7 +55,7 @@ const App: React.FC = () => {
       const interval = setInterval(checkGameLevel, 1000);
       return () => clearInterval(interval);
     }
-  }, [isGameActive, gameStartTime, players, gameLevel,players.length]);
+  }, [isGameActive, gameStartTime, players, gameLevel,players.length,questions]);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -71,7 +71,7 @@ const App: React.FC = () => {
       }, 1000);
     }
     return () => clearInterval(timer);
-  }, [isGameActive, currentQuestion, timerStarted, gameType,players]);
+  }, [isGameActive, currentQuestion, timerStarted, gameType,players,questions]);
 
   const generateQuestion = () => {
     const currentPlayer = players[currentPlayerIndex];
@@ -137,6 +137,7 @@ const App: React.FC = () => {
   };
 
   const handleStartGameAfterRules = () => {
+
     setShowRules(false);
     setIsGameActive(true);
     setGameStartTime(Date.now());
@@ -171,6 +172,7 @@ const App: React.FC = () => {
     
     setCurrentPlayerIndex(prev => (prev + 1) % players.length);
     generateQuestion();
+
     setCountdown(30);
     setTimerStarted(false);
   };

@@ -10,56 +10,13 @@ type Questions = {
     };
   };
 };
+let initialQuestions: Questions
 
-let finalQuestions: Questions = {
-  friends: {
-    Mild: {
-      truth: [],
-      dare: []
-    },
-    Hot: {
-      truth: [],  
-      dare: []
-    },
-    Spicy: {
-      truth: [],
-      dare: []
-    }
-  },
-  lovers: {
-    Mild: {
-      truth: [],
-      dare: []
-    },
-    Hot: {
-      truth: [],
-      dare: []
-    },
-    Spicy: {
-      truth: [],
-      dare: []
-    }
-  },
-  "🍍": {
-    Mild: {
-      truth: [],
-      dare: []
-    },
-    Hot: {
-      truth: [],
-      dare: []
-    },
-    Spicy: {
-      truth: [],
-      dare: []
-    }
-  }
-};
 
-          
-await supabase.from('questions').select().then((response) => {
-  console.log("Response from Supabase:", response.data);
-  let data = response.data;
+async function fetchQuestions() {
+const { data,error } = await supabase.from('questions').select()
+if(data) {
+  console.log("Response from Supabase:", data);
   let questions = {
     friends: {
       Mild: {
@@ -104,6 +61,7 @@ await supabase.from('questions').select().then((response) => {
       }
     }
   };
+  
   // Map the data to the questions object
   data.forEach((item) => {
     const theme = item.theme as GameTheme;
@@ -116,15 +74,37 @@ await supabase.from('questions').select().then((response) => {
 
     };
     
-    questions[theme][level][type].push(question);
+    questions= {
+      ...questions,
+      [theme]: {
+        ...questions[theme],
+        [level]: {
+          ...questions[theme][level],
+          [type]: [...questions[theme][level][type], question]
+        }
+      }
+    };
+    // console.log(`Added question: ${item.question} to ${theme} - ${level} - ${type}`);
   });
   console.log("Mapped questions:", questions);
-  finalQuestions=questions;
+  initialQuestions=questions;
 }
 
-)
+else {
+  console.error("Error fetching questions from Supabase:", error);
+}
+}
+fetchQuestions().then(() => {
+  
+const finalQuestions: Questions = initialQuestions; // Final questions object to be exported
+  console.log("Final questions loaded:", initialQuestions );
+  console.log("Total questions loaded:",finalQuestions);
+  questions = initialQuestions; // Assign to the questions export
+}).catch((error) => {
+  console.error("Error loading questions:", error);
+});
 
-export const questions: Questions = finalQuestions;
+export let questions: Questions ;
 
 // Fetch questions from Supabase
 // const fetchQuestions = async () => {
