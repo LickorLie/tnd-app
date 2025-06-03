@@ -55,7 +55,7 @@ const App: React.FC = () => {
       const interval = setInterval(checkGameLevel, 1000);
       return () => clearInterval(interval);
     }
-  }, [isGameActive, gameStartTime, players, gameLevel,players.length,questions]);
+  }, [isGameActive, gameStartTime, players, gameLevel,players.length]);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -71,7 +71,7 @@ const App: React.FC = () => {
       }, 1000);
     }
     return () => clearInterval(timer);
-  }, [isGameActive, currentQuestion, timerStarted, gameType,players,questions]);
+  }, [isGameActive, currentQuestion, timerStarted, gameType,players]);
 
   const generateQuestion = () => {
     const currentPlayer = players[currentPlayerIndex];
@@ -279,7 +279,7 @@ const App: React.FC = () => {
                   />
                 </div>
                                     
-                    {!isGameActive && players.length > 1 ? (
+                    {!isGameActive && players.length > 1  ? (
                       <div className="text-center mb-4">
                         {/* <p className="text-gray-600 mb-6 mt-6">
                           Click Start to begin the game!
@@ -307,7 +307,9 @@ const App: React.FC = () => {
                           passesLeft={players[currentPlayerIndex].passesLeft}
                         />
                         <div className="mt-4 text-center">
-                          <Button onClick={moveToNextPlayer} color="green">
+                          <Button onClick={moveToNextPlayer} color="green" 
+                                                      disabled={gameType === 'dare' && timerStarted ? true:false}
+>
                             Next Player
                           </Button>
                         </div>
