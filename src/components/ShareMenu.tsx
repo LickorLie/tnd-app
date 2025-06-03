@@ -6,7 +6,8 @@ import {
   Camera, 
   Video, 
   MessageSquare,
-  Phone
+  Phone,
+  Share2Icon
 } from 'lucide-react';
 import Modal from './Modal';
 
@@ -23,6 +24,8 @@ const ShareMenu: React.FC<ShareMenuProps> = ({ isOpen, onClose, onShare }) => {
     { id: 'tiktok', icon: Video, label: 'TikTok', color: 'bg-black', emoji: '🎵' },
     { id: 'whatsapp', icon: MessageSquare, label: 'WhatsApp', color: 'bg-green-500', emoji: '💬' },
     { id: 'sms', icon: Phone, label: 'SMS', color: 'bg-blue-500', emoji: '📱' },
+        { id: 'other', icon: Share2Icon , label: 'Other', color: 'bg-red-500', emoji: '📩' },
+
   ];
 
   return (

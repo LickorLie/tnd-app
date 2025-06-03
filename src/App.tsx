@@ -346,10 +346,14 @@ const App: React.FC = () => {
             <ShareMenu
               isOpen={showShareMenu}
               onClose={() => setShowShareMenu(false)}
-              onShare={(platform) => {
+              onShare={async (platform) => {
                 const shareText = "Join me for an exciting game of Truth or Dare! 🎲";
                 const shareUrl = "https://lickorlie.com"//window.location.href;
-                
+                const shareData = {
+                    title: "Truth or Dare Game",
+                    text: shareText,
+                    url: shareUrl
+                  };                
                 const shareLinks = {
                   whatsapp: `https://wa.me/?text=${encodeURIComponent(`${shareText} ${shareUrl}`)}`,
                   instagram: `https://www.instagram.com/share?url=${encodeURIComponent(shareUrl)}`,
@@ -357,8 +361,19 @@ const App: React.FC = () => {
                   tiktok: `https://www.tiktok.com/share?url=${encodeURIComponent(shareUrl)}`,
                   sms: `sms:?body=${encodeURIComponent(`${shareText} ${shareUrl}`)}`
                 };
-
-                window.open(shareLinks[platform as keyof typeof shareLinks], '_blank');
+                if (platform === 'whatsapp') {
+                  window.open(shareLinks.whatsapp, '_blank');
+                } else if (platform === 'instagram') {
+                  await navigator.share(shareData);
+                } else if (platform === 'snapchat') {
+                  await navigator.share(shareData);
+                } else if (platform === 'tiktok') {
+                  await navigator.share(shareData);
+                } else if (platform === 'sms') {
+                  window.open(shareLinks.sms, '_blank');
+                } else if (platform === 'other') {
+                                    await navigator.share(shareData);
+                }
                 setShowShareMenu(false);
               }}
             />
