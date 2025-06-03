@@ -24,6 +24,7 @@ export const selectQuestion = (
   
   // Filter questions based on the calculated distribution
   const availableQuestions = questionPool.filter(q => {
+    console.log(`Checking question: ${q.text}, requiresPartner: ${q.requiresPartner}`, questionType);
     if (questionType === 'solo') {
       return !q.requiresPartner;
     }

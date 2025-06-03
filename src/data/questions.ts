@@ -57,7 +57,7 @@ let finalQuestions: Questions = {
 };
 
           
-supabase.from('questions').select().then((response) => {
+await supabase.from('questions').select().then((response) => {
   console.log("Response from Supabase:", response.data);
   let data = response.data;
   let questions = {
@@ -111,8 +111,8 @@ supabase.from('questions').select().then((response) => {
     const type = item.type as QuestionType;
     const question: Question = {
       text: item.question,
-      requiresPartner: item.requiresPartner,
-      type:item.requiresPartner==true? 'partner' : 'solo',
+      requiresPartner: item.requirespartner,
+      type:item.requirespartner === true ? 'partner' : 'solo',
 
     };
     
