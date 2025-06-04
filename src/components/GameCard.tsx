@@ -4,6 +4,7 @@ import { Timer } from 'lucide-react';
 import Button from './Button';
 import { Player, Question } from '../types';
 import { getValidInteractionPartners } from '../utils/interactionRules';
+import { questions } from '../data/questions';
 
 interface GameCardProps {
   type: 'truth' | 'dare';
@@ -60,22 +61,52 @@ const GameCard: React.FC<GameCardProps> = ({
   const currentStyle = styles[type];
 
   const validPartners = getValidInteractionPartners(currentPlayer, allPlayers);
+  const generateRandomTruthQuestion = () => {
+    const randomIndex = Math.floor(Math.random() * questions.friends.Mild.truth.length);
+    return questions.friends.Mild.truth[randomIndex];
+  };
   if (question.requiresPartner && validPartners.length === 0) {
-
+    // If no valid partners are available show a truth card  with random question
+    const randomTruth = generateRandomTruthQuestion();
+    currentPlayer.questionsAnswered += 1; // Increment the question count for the current player
     return (
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -20 }}
-        className="bg-red-100 border-2 border-red-300 rounded-2xl p-6 mb-6"
-      >
-        <h3 className="text-xl font-bold text-red-600 mb-2">No Valid Partners Available</h3>
-        <p className="text-red-600">
-          Based on the orientations and preferences, there are no valid partners for this interaction.
-          Try using a Joker or Pass to skip this turn.
-        </p>
-      </motion.div>
+  <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      className={`bg-gradient-to-br from-pink-400 via-rose-500 to-purple-600 *:text-white border-pink-300 
+        border-2 rounded-2xl p-6 mb-6 shadow-xl backdrop-blur-sm`}
+    >
+      <h2 className="text-3xl font-bold mb-4 capitalize flex items-center justify-center">
+        No Truth 🤔
+      </h2>
+      
+      <p className="text-xl mb-6 text-center font-medium">{ randomTruth.text }</p>
+      
+      <div className="flex justify-between items-center mt-4">
+        {currentPlayer.gender==="male"?<p className="text-lg font-semibold rounded-md bg-blue-400 text-white px-4">"{currentPlayer.name}, it’s your turn now!”</p>:
+        <p className="text-lg font-semibold rounded-md bg-pink-400 text-white px-4">"{currentPlayer.name}, it’s your turn now!”</p>}
+
+      </div>
+      
+    </motion.div>        
+
     );
+
+    // return (
+    //   <motion.div
+    //     initial={{ opacity: 0, y: 20 }}
+    //     animate={{ opacity: 1, y: 0 }}
+    //     exit={{ opacity: 0, y: -20 }}
+    //     className="bg-red-100 border-2 border-red-300 rounded-2xl p-6 mb-6"
+    //   >
+    //     <h3 className="text-xl font-bold text-red-600 mb-2">No Valid Partners Available</h3>
+    //     <p className="text-red-600">
+    //       Based on the orientations and preferences, there are no valid partners for this interaction.
+    //       Try using a Joker or Pass to skip this turn.
+    //     </p>
+    //   </motion.div>
+    // );
   }
 
   return (
