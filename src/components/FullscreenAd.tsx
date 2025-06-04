@@ -72,7 +72,7 @@ const FullscreenAd: React.FC<FullscreenAdProps> = ({ onComplete }) => {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
           >
-            <div className="relative aspect-video rounded-2xl overflow-hidden bg-gradient-to-br from-purple-600 via-pink-500 to-orange-500">
+            <div className="relative aspect-video rounded-2xl bg-gradient-to-br bg-black">
               {/* Ad Content */}
               <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-8 text-center">
 {adData && (
@@ -110,7 +110,7 @@ const FullscreenAd: React.FC<FullscreenAdProps> = ({ onComplete }) => {
               </div>
 
               {/* Progress Bar */}
-              <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/20">
+              <div className="absolute -top-36 left-0 right-0 h-1 bg-white/20">
                 <motion.div
                   className="h-full bg-white"
                   initial={{ width: "100%" }}
