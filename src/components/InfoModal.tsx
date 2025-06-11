@@ -37,8 +37,7 @@ const InfoModal: React.FC<InfoModalProps> = ({ isOpen, onClose }) => {
                     </button>
                   </div>
           <div className="p-4">
-            <p className="mb-4 p-0  text-center">To match dares correctly, the app currently supports only "male" and "female" genders, and "straight" or "bisexual" orientations. <br />Due to technical limits, full inclusivity isn’t possible yet — but we’re working on it. <br /><br /> Thanks for understanding! 💖🍍
-</p>
+            <p className="mb-4 p-0  text-center">To match dares correctly, the app currently supports only "male" and "female" genders, and "straight" or "bisexual" orientations. <br /> <br />Due to technical limits, full inclusivity isn’t possible yet — but we’re working on it. <br /><br /> Thanks for understanding! 💖🍍</p>
           </div>
 
         </div>
