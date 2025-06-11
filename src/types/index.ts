@@ -16,4 +16,5 @@ export interface Question {
   text: string;
   requiresPartner: boolean;
   type: 'solo' | 'partner';
+  timer?: number; // Optional timer for the question
 }

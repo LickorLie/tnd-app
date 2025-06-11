@@ -71,7 +71,7 @@ if(data) {
       text: item.question,
       requiresPartner: item.requirespartner,
       type:item.requirespartner === true ? 'partner' : 'solo',
-
+      timer: item.timer || 30,
     };
     
     questions= {
@@ -88,10 +88,12 @@ if(data) {
   });
   console.log("Mapped questions:", questions);
   initialQuestions=questions;
+
 }
 
 else {
   console.error("Error fetching questions from Supabase:", error);
+  
 }
 }
 fetchQuestions().then(() => {

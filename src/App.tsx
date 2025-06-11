@@ -64,7 +64,7 @@ const App: React.FC = () => {
         setCountdown(prev => {
           if (prev <= 1) {
             moveToNextPlayer();
-            return 30;
+            return currentQuestion.timer || 30; // Reset to default timer or 60 seconds
           }
           return prev - 1;
         });
@@ -89,6 +89,7 @@ const App: React.FC = () => {
     if (newQuestion) {
       setGameType(type);
       setCurrentQuestion(newQuestion);
+      setCountdown(newQuestion.timer || 30); // Use question's timer or default to 30 seconds
       setSelectedPartner(null);
       setTimerStarted(false);
     } else {
@@ -97,6 +98,7 @@ const App: React.FC = () => {
       const randomIndex = Math.floor(Math.random() * soloQuestions.length);
       setGameType(type);
       setCurrentQuestion(soloQuestions[randomIndex]);
+      setCountdown(soloQuestions[randomIndex].timer || 30); // Use question's timer or default to 30 seconds
       setSelectedPartner(null);
       setTimerStarted(false);
     }
@@ -173,7 +175,6 @@ const App: React.FC = () => {
     setCurrentPlayerIndex(prev => (prev + 1) % players.length);
     generateQuestion();
 
-    setCountdown(30);
     setTimerStarted(false);
   };
 

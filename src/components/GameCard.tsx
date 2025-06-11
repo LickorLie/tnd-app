@@ -150,7 +150,7 @@ const GameCard: React.FC<GameCardProps> = ({
         <div className="w-full bg-white/30 rounded-full h-2 mt-3 overflow-hidden backdrop-blur-sm">
           <div
             className="bg-white h-full rounded-full transition-all duration-1000 ease-linear"
-            style={{ width: `${(countdown! / 30) * 100}%` }}
+            style={{ width: `${(countdown! / (question.timer|| 30) ) * 100}%` }}
           />
         </div>
       )}
