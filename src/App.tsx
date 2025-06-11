@@ -16,7 +16,7 @@ import { GameLevel, GameTheme, Player, Question } from './types';
 import { getValidInteractionPartners } from './utils/interactionRules';
 import { selectQuestion } from './utils/questionSelector';
 import { questions } from './data/questions';
-
+import InfoModal from './components/InfoModal';
 const App: React.FC = () => {
   const [showInitialAd, setShowInitialAd] = useState(true);
   const [gameType, setGameType] = useState<'truth' | 'dare' | null>(null);
@@ -36,7 +36,7 @@ const App: React.FC = () => {
   const [showThemeSelection, setShowThemeSelection] = useState<boolean>(true);
   const [timerStarted, setTimerStarted] = useState<boolean>(false);
   const [selectedPartner, setSelectedPartner] = useState<Player | null>(null);
-
+  const [showInfoModal, setShowInfoModal] = useState<boolean>(true);
   useEffect(() => {
     if (isGameActive && gameStartTime) {
       const checkGameLevel = () => {
@@ -390,6 +390,9 @@ const App: React.FC = () => {
   };
 
   return (
+    <>
+    {/* Show Info Modal before Game */}
+    <InfoModal isOpen={showInfoModal} onClose={() => setShowInfoModal(false)} />
     <div className="min-h-screen bg-gradient-to-br from-violet-600 via-fuchsia-500 to-orange-500 flex flex-col">
       <MenuBar 
         activeTab={activeTab} 
@@ -405,6 +408,7 @@ const App: React.FC = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 

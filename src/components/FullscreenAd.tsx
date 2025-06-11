@@ -87,7 +87,7 @@ const FullscreenAd: React.FC<FullscreenAdProps> = ({ onComplete }) => {
               <div className="relative h-48">
                 <img
                   src={adData.image}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-fill"
                 />
                 <div className="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
                   {adData.discount}
