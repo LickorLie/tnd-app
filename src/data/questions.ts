@@ -61,7 +61,8 @@ if(data) {
         truth: [],
         dare: []
       }
-      
+
+    }
   };
   
   // Map the data to the questions object
