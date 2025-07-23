@@ -62,8 +62,8 @@ const GameCard: React.FC<GameCardProps> = ({
 
   const validPartners = getValidInteractionPartners(currentPlayer, allPlayers);
   const generateRandomTruthQuestion = () => {
-    const randomIndex = Math.floor(Math.random() * questions.friends.Mild.truth.length);
-    return questions.friends.Mild.truth[randomIndex];
+    const randomIndex = Math.floor(Math.random() * questions.friends.Sweet.truth.length);
+    return questions.friends.Sweet.truth[randomIndex];
   };
   if (question.requiresPartner && validPartners.length === 0) {
     // If no valid partners are available show a truth card  with random question
