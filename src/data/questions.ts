@@ -30,6 +30,10 @@ if(data) {
       Spicy: {
         truth: [],
         dare: []
+      },
+      ExtraSpicy: {
+        truth: [],
+        dare: []
       }
     },
     lovers: {
@@ -42,6 +46,10 @@ if(data) {
         dare: []
       },
       Spicy: {
+        truth: [],
+        dare: []
+      },
+      ExtraSpicy: {
         truth: [],
         dare: []
       }
@@ -58,7 +66,10 @@ if(data) {
       Spicy: {
         truth: [],
         dare: []
-      }
+      },
+      ExtraSpicy: {
+        truth: [],
+        dare: []}
     }
   };
   
