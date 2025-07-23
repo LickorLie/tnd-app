@@ -43,7 +43,7 @@ const App: React.FC = () => {
         const timeElapsed = Date.now() - gameStartTime;
         const allPlayersAnsweredTwice = players.every(p => p.questionsAnswered >= 2);
         const allPlayersAnsweredThrice = players.every(p => p.questionsAnswered >= 3);
-        if ((timeElapsed >= 20 * 60 * 1000 || allPlayersAnsweredTwice) && gameLevel === 'Mild') {
+        if ((timeElapsed >= 20 * 60 * 1000 || allPlayersAnsweredTwice) && gameLevel === 'Sweet') {
           setGameLevel('Hot');
           setHasUnlockedRewards(true);
         } else if ((timeElapsed >= 40 * 60 * 1000 || allPlayersAnsweredTwice) && gameLevel === 'Hot') {
@@ -154,7 +154,7 @@ const App: React.FC = () => {
     setCurrentQuestion(null);
     setIsGameActive(false);
     setGameStartTime(null);
-    setGameLevel('Mild');
+    setGameLevel('Sweet');
     setCurrentPlayerIndex(0);
     setTimerStarted(false);
     setPlayers(prevPlayers => 
@@ -251,10 +251,10 @@ const App: React.FC = () => {
                     <div className="text-center ">
                       <span className="inline-block px-3 py-1 mb-4 rounded-full text-sm font-semibold" 
                         style={{
-                          backgroundColor: gameLevel === 'Mild' ? '#E5E7EB' : 
+                          backgroundColor: gameLevel === 'Sweet' ? '#E5E7EB' : 
                                          gameLevel === 'Hot' ? '#FECACA' : 
                                          '#FCA5A5',
-                          color: gameLevel === 'Mild' ? '#374151' : '#991B1B'
+                          color: gameLevel === 'Sweet' ? '#374151' : '#991B1B'
                         }}>
                         Level: {gameLevel}
                       </span>
