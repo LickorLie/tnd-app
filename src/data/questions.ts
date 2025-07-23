@@ -34,6 +34,10 @@ if(data) {
       Sexy: {
      truth: [],
         dare: []
+      },
+ Wet&Wild: {
+        truth: [],
+        dare: []
       }
     },
     lovers: {
@@ -50,6 +54,10 @@ if(data) {
         dare: []
       },
      Sexy: {
+        truth: [],
+        dare: []
+      },
+    Wet&Wild: {
         truth: [],
         dare: []
       }
@@ -69,6 +77,10 @@ if(data) {
         dare: []
       },
      Sexy: {
+        truth: [],
+        dare: []
+      },
+ Wet&Wild: {
         truth: [],
         dare: []
       }
