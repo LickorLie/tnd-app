@@ -76,6 +76,7 @@ if(data) {
       type:item.requirespartner === true ? 'partner' : 'solo',
       timer: item.timer || 30,
     };
+    console.log('Mapping Question : ',question)
     
     questions= {
       ...questions,
@@ -87,7 +88,8 @@ if(data) {
         }
       }
     };
-    // console.log(`Added question: ${item.question} to ${theme} - ${level} - ${type}`);
+    
+    console.log(`Added question: ${item.question} to ${theme} - ${level} - ${type}`);
   });
   console.log("Mapped questions:", questions);
   initialQuestions=questions;
