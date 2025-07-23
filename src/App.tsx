@@ -41,15 +41,17 @@ const App: React.FC = () => {
     if (isGameActive && gameStartTime) {
       const checkGameLevel = () => {
         const timeElapsed = Date.now() - gameStartTime;
+        console.log("Time Elapsed:",timeElapsed)
         const allPlayersAnsweredTwice = players.every(p => p.questionsAnswered >= 2);
-        const allPlayersAnsweredThrice = players.every(p => p.questionsAnswered >= 3);
+        const allPlayersAnsweredThrice = players.every(p => p.questionsAnswered >= 4);
+        const allPlayersAnsweredFour = players.every(p => p.questionsAnswered >= 6);
         if ((timeElapsed >= 20 * 60 * 1000 || allPlayersAnsweredTwice) && gameLevel === 'Sweet') {
           setGameLevel('Sexy');
           setHasUnlockedRewards(true);
-        } else if ((timeElapsed >= 40 * 60 * 1000 || allPlayersAnsweredTwice) && gameLevel === 'Sexy') {
+        } else if ((timeElapsed >= 40 * 60 * 1000 || allPlayersAnsweredThrice) && gameLevel === 'Sexy') {
           setGameLevel('Spicy');
           setHasUnlockedRewards(true);
-        } else if ((timeElapsed >= 60 * 60 * 1000 || allPlayersAnsweredThrice) && gameLevel === 'Spicy') {
+        } else if ((timeElapsed >= 60 * 60 * 1000 || allPlayersAnsweredFour) && gameLevel === 'Spicy') {
           setGameLevel('Wet & Wild');
           setHasUnlockedRewards(true);
         }
