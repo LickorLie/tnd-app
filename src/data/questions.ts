@@ -35,7 +35,7 @@ if(data) {
      truth: [],
         dare: []
       },
- Wet&Wild: {
+ WetnWild: {
         truth: [],
         dare: []
       }
@@ -57,7 +57,7 @@ if(data) {
         truth: [],
         dare: []
       },
-    Wet&Wild: {
+    WetnWild: {
         truth: [],
         dare: []
       }
@@ -80,7 +80,7 @@ if(data) {
         truth: [],
         dare: []
       },
- Wet&Wild: {
+ WetnWild: {
         truth: [],
         dare: []
       }
