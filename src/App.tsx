@@ -42,14 +42,14 @@ const App: React.FC = () => {
       const checkGameLevel = () => {
         const timeElapsed = Date.now() - gameStartTime;
         const allPlayersAnsweredTwice = players.every(p => p.questionsAnswered >= 2);
-        
+        const allPlayersAnsweredThrice = players.every(p => p.questionsAnswered >= 3);
         if ((timeElapsed >= 20 * 60 * 1000 || allPlayersAnsweredTwice) && gameLevel === 'Mild') {
           setGameLevel('Hot');
           setHasUnlockedRewards(true);
         } else if ((timeElapsed >= 40 * 60 * 1000 || allPlayersAnsweredTwice) && gameLevel === 'Hot') {
           setGameLevel('Spicy');
           setHasUnlockedRewards(true);
-        } else if ((timeElapsed >= 60 * 60 * 1000 || allPlayersAnsweredTwice) && gameLevel === 'Spicy') {
+        } else if ((timeElapsed >= 60 * 60 * 1000 || allPlayersAnsweredThrice) && gameLevel === 'Spicy') {
           setGameLevel('ExtraSpicy');
           setHasUnlockedRewards(true);
         }
