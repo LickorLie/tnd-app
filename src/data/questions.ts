@@ -30,11 +30,8 @@ if(data) {
       Spicy: {
         truth: [],
         dare: []
-      },
-      ExtraSpicy: {
-        truth: [],
-        dare: []
       }
+    
     },
     lovers: {
       Sweet: {
@@ -48,11 +45,8 @@ if(data) {
       Spicy: {
         truth: [],
         dare: []
-      },
-      ExtraSpicy: {
-        truth: [],
-        dare: []
       }
+     
     },
     "🍍": {
       Sweet: {
@@ -66,11 +60,8 @@ if(data) {
       Spicy: {
         truth: [],
         dare: []
-      },
-      ExtraSpicy: {
-        truth: [],
-        dare: []}
-    }
+      }
+      
   };
   
   // Map the data to the questions object
