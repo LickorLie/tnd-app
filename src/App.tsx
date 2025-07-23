@@ -24,7 +24,7 @@ const App: React.FC = () => {
   const [players, setPlayers] = useState<Player[]>([]);
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState<number>(0);
   const [activeTab, setActiveTab] = useState<'home' | 'ads' | 'contact'>('home');
-  const [gameLevel, setGameLevel] = useState<GameLevel>('Mild');
+  const [gameLevel, setGameLevel] = useState<GameLevel>('Sweet');
   const [gameTheme, setGameTheme] = useState<GameTheme>('friends');
   const [gameStartTime, setGameStartTime] = useState<number | null>(null);
   const [isGameActive, setIsGameActive] = useState<boolean>(false);
