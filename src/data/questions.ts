@@ -16,7 +16,7 @@ let initialQuestions: Questions
 async function fetchQuestions() {
 const { data,error } = await supabase.from('questions').select()
 if(data) {
-  console.log("Response from Supabase:", data);
+  // console.log("Response from Supabase:", data);
   let questions = {
     friends: {
       Sweet: {
@@ -98,8 +98,8 @@ if(data) {
       type:item.requirespartner === true ? 'partner' : 'solo',
       timer: item.timer || 30,
     };
-    console.log('Mapping Question : ', question)
-    console.log('Mapping ID : ', item.id)
+    // console.log('Mapping Question : ', question)
+    // console.log('Mapping ID : ', item.id)
     
     questions= {
       ...questions,
@@ -112,9 +112,9 @@ if(data) {
       }
     };
     
-    console.log(`Added question: ${item.question} to ${theme} - ${level} - ${type}`);
+    // console.log(`Added question: ${item.question} to ${theme} - ${level} - ${type}`);
   });
-  console.log("Mapped questions:", questions);
+  // console.log("Mapped questions:", questions);
   initialQuestions=questions;
 
 }
@@ -127,8 +127,8 @@ else {
 fetchQuestions().then(() => {
   
 const finalQuestions: Questions = initialQuestions; // Final questions object to be exported
-  console.log("Final questions loaded:", initialQuestions );
-  console.log("Total questions loaded:",finalQuestions);
+  // console.log("Final questions loaded:", initialQuestions );
+  // console.log("Total questions loaded:",finalQuestions);
   questions = initialQuestions; // Assign to the questions export
 }).catch((error) => {
   console.error("Error loading questions:", error);
