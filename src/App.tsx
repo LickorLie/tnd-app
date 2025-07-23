@@ -43,8 +43,8 @@ const App: React.FC = () => {
         const timeElapsed = Date.now() - gameStartTime;
         console.log("Time Elapsed:",timeElapsed)
         const allPlayersAnsweredTwice = players.every(p => p.questionsAnswered >= 2);
-        const allPlayersAnsweredThrice = players.every(p => p.questionsAnswered >= 4);
-        const allPlayersAnsweredFour = players.every(p => p.questionsAnswered >= 6);
+        const allPlayersAnsweredThrice = players.every(p => p.questionsAnswered >= 5);
+        const allPlayersAnsweredFour = players.every(p => p.questionsAnswered >= 8);
         if ((timeElapsed >= 20 * 60 * 1000 || allPlayersAnsweredTwice) && gameLevel === 'Sweet') {
           setGameLevel('Sexy');
           setHasUnlockedRewards(true);
