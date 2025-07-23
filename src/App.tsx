@@ -49,6 +49,9 @@ const App: React.FC = () => {
         } else if ((timeElapsed >= 40 * 60 * 1000 || allPlayersAnsweredTwice) && gameLevel === 'Hot') {
           setGameLevel('Spicy');
           setHasUnlockedRewards(true);
+        } else if ((timeElapsed >= 60 * 60 * 1000 || allPlayersAnsweredTwice) && gameLevel === 'Spicy') {
+          setGameLevel('ExtraSpicy');
+          setHasUnlockedRewards(true);
         }
       };
 
