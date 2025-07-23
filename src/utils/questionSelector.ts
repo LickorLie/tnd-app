@@ -9,8 +9,12 @@ export const selectQuestion = (
   gameLevel: GameLevel,
   type: 'truth' | 'dare'
 ): Question | null => {
-  const questionPool = questions[gameTheme][gameLevel][type];
-  
+  var questionPool;
+  if (gameLevel==='Wet & Wild'){
+   questionPool = questions[gameTheme]['WetnWild'][type];
+  } else {
+   questionPool = questions[gameTheme][gameLevel][type];
+  }
   if (type === 'truth') {
     // For truths, only select solo questions
     const soloQuestions = questionPool.filter(q => !q.requiresPartner);
