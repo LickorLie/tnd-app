@@ -44,13 +44,13 @@ const App: React.FC = () => {
         const allPlayersAnsweredTwice = players.every(p => p.questionsAnswered >= 2);
         const allPlayersAnsweredThrice = players.every(p => p.questionsAnswered >= 3);
         if ((timeElapsed >= 20 * 60 * 1000 || allPlayersAnsweredTwice) && gameLevel === 'Sweet') {
-          setGameLevel('Hot');
+          setGameLevel('Sexy');
           setHasUnlockedRewards(true);
-        } else if ((timeElapsed >= 40 * 60 * 1000 || allPlayersAnsweredTwice) && gameLevel === 'Hot') {
+        } else if ((timeElapsed >= 40 * 60 * 1000 || allPlayersAnsweredTwice) && gameLevel === 'Sexy') {
           setGameLevel('Spicy');
           setHasUnlockedRewards(true);
         } else if ((timeElapsed >= 60 * 60 * 1000 || allPlayersAnsweredThrice) && gameLevel === 'Spicy') {
-          setGameLevel('ExtraSpicy');
+          setGameLevel('Wet & Wild');
           setHasUnlockedRewards(true);
         }
       };
