@@ -1,4 +1,4 @@
-export type GameLevel = 'Mild' | 'Hot' | 'Spicy' | 'Extra Spicy';
+export type GameLevel = 'Sweet' | 'Sexy' | 'Spicy' | 'Wet & Wild';
 export type GameTheme = '🍍' | 'lovers' | 'friends';
 export type Gender = 'male' | 'female';
 export type Orientation = 'straight' | 'bisexual';
