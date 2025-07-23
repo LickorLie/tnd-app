@@ -76,7 +76,8 @@ if(data) {
       type:item.requirespartner === true ? 'partner' : 'solo',
       timer: item.timer || 30,
     };
-    console.log('Mapping Question : ',question)
+    console.log('Mapping Question : ', question)
+    console.log('Mapping ID : ', item.id)
     
     questions= {
       ...questions,
