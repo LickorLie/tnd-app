@@ -41,7 +41,7 @@ const App: React.FC = () => {
     if (isGameActive && gameStartTime) {
       const checkGameLevel = () => {
         const timeElapsed = Date.now() - gameStartTime;
-        console.log("Time Elapsed:",timeElapsed)
+        // console.log("Time Elapsed:",timeElapsed)
         const allPlayersAnsweredTwice = players.every(p => p.questionsAnswered >= 2);
         const allPlayersAnsweredThrice = players.every(p => p.questionsAnswered >= 5);
         const allPlayersAnsweredFour = players.every(p => p.questionsAnswered >= 8);
