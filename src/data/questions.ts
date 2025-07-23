@@ -19,7 +19,7 @@ if(data) {
   console.log("Response from Supabase:", data);
   let questions = {
     friends: {
-      Mild: {
+      Sweet: {
         truth: [],
         dare: []
       },
@@ -37,7 +37,7 @@ if(data) {
       }
     },
     lovers: {
-      Mild: {
+      Sweet: {
         truth: [],
         dare: []
       },
@@ -55,7 +55,7 @@ if(data) {
       }
     },
     "🍍": {
-      Mild: {
+      Sweet: {
         truth: [],
         dare: []
       },
