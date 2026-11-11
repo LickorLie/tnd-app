@@ -407,7 +407,7 @@ const App: React.FC = () => {
       <div className="flex-grow flex items-center justify-center p-4 pb-20">
         <div className="bg-white/90 backdrop-blur-lg rounded-3xl shadow-2xl p-8 max-w-md w-full border border-white/20">
           <h1 className="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-violet-600 to-orange-500 text-transparent bg-clip-text">
-            Truth or Dare
+            Truth or Dare <span className="text-black">👅</span>
           </h1>
           {renderContent()}
         </div>
