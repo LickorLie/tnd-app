@@ -15,7 +15,6 @@ import FullscreenAd from './components/FullscreenAd';
 import { GameLevel, GameTheme, Player, Question } from './types';
 import { getValidInteractionPartners } from './utils/interactionRules';
 import { selectQuestion } from './utils/questionSelector';
-import { questions } from './data/questions';
 import InfoModal from './components/InfoModal';
 const App: React.FC = () => {
   const [showInitialAd, setShowInitialAd] = useState(true);
@@ -81,9 +80,9 @@ const App: React.FC = () => {
   const generateQuestion = () => {
     const currentPlayer = players[currentPlayerIndex];
     const random = Math.random();
-    const type = random < 0.35 ? 'truth' : 'dare';
-    
-    const newQuestion = selectQuestion(
+    let type: 'truth' | 'dare' = random < 0.35 ? 'truth' : 'dare';
+
+    let newQuestion = selectQuestion(
       currentPlayer,
       players,
       gameTheme,
@@ -91,22 +90,22 @@ const App: React.FC = () => {
       type
     );
 
-    if (newQuestion) {
-      setGameType(type);
-      setCurrentQuestion(newQuestion);
-      setCountdown(newQuestion.timer || 30); // Use question's timer or default to 30 seconds
-      setSelectedPartner(null);
-      setTimerStarted(false);
-    } else {
-      // If no valid question is found, try again with a solo question
-      const soloQuestions = questions[gameTheme][gameLevel][type].filter(q => !q.requiresPartner);
-      const randomIndex = Math.floor(Math.random() * soloQuestions.length);
-      setGameType(type);
-      setCurrentQuestion(soloQuestions[randomIndex]);
-      setCountdown(soloQuestions[randomIndex].timer || 30); // Use question's timer or default to 30 seconds
-      setSelectedPartner(null);
-      setTimerStarted(false);
+    if (!newQuestion) {
+      // No question of this type available: try the other type
+      type = type === 'truth' ? 'dare' : 'truth';
+      newQuestion = selectQuestion(currentPlayer, players, gameTheme, gameLevel, type);
     }
+
+    if (!newQuestion) {
+      console.error('No questions available (yet) for', gameTheme, gameLevel);
+      return;
+    }
+
+    setGameType(type);
+    setCurrentQuestion(newQuestion);
+    setCountdown(newQuestion.timer || 30); // Use question's timer or default to 30 seconds
+    setSelectedPartner(null);
+    setTimerStarted(false);
   };
 
   const addPlayer = (player: Omit<Player, 'questionsAnswered' | 'jokersLeft' | 'passesLeft'>) => {

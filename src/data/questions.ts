@@ -88,10 +88,21 @@ if(data) {
   };
   
   // Map the data to the questions object
+  // Normalize values from the database so one badly entered row
+  // (empty level, lowercase "spicy", extra spaces) can't break loading all questions.
+  const levelKeys: Record<string, string> = {
+    sweet: 'Sweet', hot: 'Hot', spicy: 'Spicy', sexy: 'Sexy',
+    wetnwild: 'WetnWild', 'wet & wild': 'WetnWild', 'wet&wild': 'WetnWild', 'wet and wild': 'WetnWild',
+  };
   data.forEach((item) => {
-    const theme = item.theme as GameTheme;
-    const level = item.level as GameLevel;
-    const type = item.type as QuestionType;
+    const theme = String(item.theme ?? '').trim() as GameTheme;
+    const level = levelKeys[String(item.level ?? '').trim().toLowerCase()] as GameLevel;
+    const type = String(item.type ?? '').trim().toLowerCase() as QuestionType;
+    const themeBucket = (questions as Record<string, Record<string, Record<string, Question[]>>>)[theme];
+    if (!themeBucket || !level || !themeBucket[level] || !themeBucket[level][type]) {
+      console.warn('Skipping question with invalid theme/level/type:', item.id, item.theme, item.level, item.type);
+      return;
+    }
     const question: Question = {
       text: item.question,
       requiresPartner: item.requirespartner,
