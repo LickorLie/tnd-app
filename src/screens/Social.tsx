@@ -90,13 +90,16 @@ const Poll: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [poll?.id]);
 
+  const loadResults = async (p: PollRow) => {
+    const { data } = await supabase.rpc('poll_results', { p_poll: p.id });
+    setResults(p.options.map((_, i) => Number((data || []).find((r: { option_index: number; votes: number }) => r.option_index === i)?.votes || 0)));
+  };
+
+  // Uitslag laden als je al eerder had gestemd
   useEffect(() => {
-    if (!poll || voted === null) return;
-    supabase.rpc('poll_results', { p_poll: poll.id }).then(({ data }) => {
-      const counts = poll.options.map((_, i) => Number((data || []).find((r: { option_index: number; votes: number }) => r.option_index === i)?.votes || 0));
-      setResults(counts);
-    });
-  }, [poll, voted]);
+    if (poll && voted !== null && results === null) loadResults(poll);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [poll?.id, voted]);
 
   if (!rows) return <Empty>Loading…</Empty>;
   if (!poll) return <Empty>A new question of the week is coming soon 🤭</Empty>;
@@ -105,7 +108,9 @@ const Poll: React.FC = () => {
     setVoted(i);
     try { localStorage.setItem(key, String(i)); } catch { /* ignore */ }
     track('poll_vote', { poll: poll.question });
+    // Eerst de stem opslaan, dan pas de uitslag ophalen (anders telt je eigen stem niet mee)
     await supabase.from('poll_votes').insert({ poll_id: poll.id, option_index: i });
+    await loadResults(poll);
   };
   const total = results?.reduce((a, b) => a + b, 0) || 0;
 
