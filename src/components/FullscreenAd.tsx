@@ -61,73 +61,40 @@ const FullscreenAd: React.FC<FullscreenAdProps> = ({ onComplete }) => {
         <motion.div
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black"
+          className="fixed inset-0 z-50 flex flex-col bg-cream"
         >
-          <div className="absolute top-4 right-4 flex items-center space-x-2">
-            <span className="text-white font-medium">{timeLeft}s</span>
-            <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center">
-              <X className="text-white" size={24} />
-            </div>
+          {/* Voortgang: altijd de volle 10 seconden (afspraak met adverteerder) */}
+          <div className="h-[3px] bg-sand">
+            <motion.div className="h-full bg-rouge" initial={{ width: '100%' }} animate={{ width: '0%' }} transition={{ duration: 10, ease: 'linear' }} />
           </div>
-
-          <motion.div
-            className="w-full max-w-2xl p-4 cursor-pointer"
-            onClick={handleAdClick}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <div className="relative aspect-video rounded-2xl bg-gradient-to-br bg-black">
-              {/* Ad Content */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-8 text-center">
-{adData && (
-                  <a
-            
-            href={adData.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block group"
-            onClick={(e) => {
-              e.stopPropagation();
-              track('sponsor_click', { placement: 'fullscreen', sponsor: String(adData.title ?? '') });
-            }}
-          >
-            <div className="bg-white rounded-xl overflow-hidden shadow-lg transform transition-all duration-300 hover:scale-105">
-              <div className="relative h-48">
-                <img
-                  src={adData.image}
-                  className="w-full h-full object-fill"
-                />
-                <div className="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
-                  {adData.discount}
+          <div className="flex items-center justify-between px-5 h-14">
+            <span className="font-serif font-semibold text-2xl">Lick <i className="text-rouge font-medium">or</i> Lie</span>
+            <span className="flex items-center gap-1.5 text-[13px] font-semibold text-muted tabular-nums">{timeLeft}s <X size={18} strokeWidth={1.5} className="opacity-40" /></span>
+          </div>
+          <div className="flex-1 flex items-center justify-center p-5">
+            {adData && (
+              <a
+                href={adData.link}
+                target="_blank"
+                rel="noopener noreferrer sponsored"
+                onClick={() => track('sponsor_click', { placement: 'fullscreen', sponsor: String(adData.title ?? '') })}
+                className="block w-full max-w-md bg-paper rounded-card shadow-card overflow-hidden"
+              >
+                <div className="relative aspect-[16/10] bg-blush">
+                  {adData.image && <img src={adData.image} alt="" className="w-full h-full object-cover" />}
+                  {adData.discount && <span className="absolute top-3 right-3 bg-rouge text-rouge-ink text-[13px] font-semibold px-2.5 py-1 rounded-full">{adData.discount}</span>}
                 </div>
-              </div>
-              <div className="p-6">
-                <div className="flex justify-between items-start mb-2">
-                  <h3 className="text-xl font-bold text-gray-900">{adData.title}</h3>
-                  <ExternalLink className="text-purple-500 opacity-0 group-hover:opacity-100 transition-opacity" size={20} />
+                <div className="p-5">
+                  <span className="inline-block text-xs font-semibold px-2.5 py-0.5 rounded-full bg-blush mb-2">Partner</span>
+                  <div className="flex items-start justify-between gap-2">
+                    <h3 className="font-serif text-[26px] font-semibold leading-tight">{adData.title}</h3>
+                    <ExternalLink size={18} strokeWidth={1.5} className="text-muted mt-1 shrink-0" />
+                  </div>
+                  {adData.description && <p className="text-muted mt-1">{adData.description}</p>}
                 </div>
-                <p className="text-gray-600">{adData.description}</p>
-                <div className="mt-4 flex justify-between items-center">
-                  <span className="text-purple-500 font-semibold">Learn More</span>
-                  <span className="text-sm text-gray-500">Limited Time Offer</span>
-                </div>
-              </div>
-            </div>
-          </a>
-              )}
-              </div>
-
-              {/* Progress Bar */}
-              <div className="absolute -top-36 left-0 right-0 h-1 bg-white/20">
-                <motion.div
-                  className="h-full bg-white"
-                  initial={{ width: "100%" }}
-                  animate={{ width: "0%" }}
-                  transition={{ duration: 10, ease: "linear" }}
-                />
-              </div>
-            </div>
-          </motion.div>
+              </a>
+            )}
+          </div>
         </motion.div>
       )}
     </AnimatePresence>

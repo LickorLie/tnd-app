@@ -1,0 +1,27 @@
+-- Kaarten met geslacht-specifieke woorden: unisex of met "/" (stap 3C)
+begin;
+update public.questions set question = 'Pleasure a player of your choice with only your hands (handjob/fingers) while the others watch the timer. 180 seconds 😈' where question like 'Give a sensual handjob and let other player(s) watch the timer. 180 seconds.%';
+update public.questions set question = 'Pleasure a player of your choice with only your hands (handjob/fingers) 😈' where question like 'Give a handjob to a player of your choice%';
+update public.questions set question = 'Choose a player who pleasures you with only their hands (handjob/fingers) for 180 seconds 🥵' where question like 'Select a player that has to give you a handjob for 180 seconds.%';
+update public.questions set question = 'If there are more than 3 players, choose two players and pleasure them both with your hands (handjob/fingers) at the same time… good luck! Only one other player? You know what to do 😈' where question like 'If there are more than 3 players, choose at least two players and give them a handjob at the same time%';
+update public.questions set question = 'Let [partner] kiss your neck while you play with yourself. Feeling lucky? [partner] may lend a hand (handjob/fingers) 🥵' where question like 'Let [partner] kiss in your neck, while you’re playing with yourself.%';
+update public.questions set question = 'Oral: hands-free, one hand or two? And where does the free hand go… 😏' where question like 'Blowjob with 1 or 2 hands?%';
+update public.questions set question = 'What’s the best oral (blowjob/going down) you have received or given? Explain why, and ask the others for their stories too 🤭' where question like 'What’s the best blowjob you have received or have given%';
+update public.questions set question = 'Show on [partner]’s fingers how you give oral (blowjob/going down), or explain how you like to receive it 👅' where question like 'Show how you give sloppy 3000 or explain how you want it to be done.%';
+update public.questions set question = 'Show on [partner]’s fingers how you go down on someone, or explain how you like to receive it 👅' where question like 'Show how you eat the kitty or want it to be eaten%';
+update public.questions set question = 'What makes oral (going down/blowjob) really satisfying for you? Ask the other players as well 👅' where question like 'What makes a good pussy eating session%';
+update public.questions set question = 'Draw or describe your perfect kitty/eggplant 🐱🍆' where question like 'Draw or describe your perfect kitty%';
+update public.questions set question = 'Draw or describe your perfect eggplant/kitty 🍆🐱' where question like 'Draw or describe your perfect eggplant%';
+update public.questions set question = 'You have 20 seconds: name as many words as you can for vagina/penis 🤭' where question like 'Give all possible words you know for vagina%';
+update public.questions set question = 'You have 20 seconds: name as many words as you can for penis/vagina 🤭' where question like 'You have 20 seconds to come up with as many different alternative words for the word Penis%';
+update public.questions set question = 'Have you ever squirted/come really hard, or made someone do it? How did it happen? 💦' where question like 'Have you ever squirted or made someone squirt?%';
+update public.questions set question = 'Unlock a bra/unbuckle a belt with one hand within 15 seconds. Can’t do it? Remove a piece of clothing 🔥' where question like 'Unlock one bra, with one hand within 15 seconds%';
+update public.questions set question = 'Show the most sensual way to put on a condom (on a banana/fingers if needed). No condom? Act it out 😏' where question like 'What’s the most sensual way you can put on a condom%';
+update public.questions set question = 'Put your arms around [partner] from behind at the hips and whisper your favorite kink/fantasy into their ear. If someone gets turned on (hard/wet), they take a shot 😈' where question like 'Put your arms around [partner] from behind at the hips and whisper your favorite kink/fantasy into their ear. (If someone gets a boner%';
+update public.questions set question = 'Slide your hand into [partner]’s pants and feel if it’s getting warm (hard/wet?) 🥵' where question like 'Slide your hand in the pants of [partner] and feel it’s getting warm%';
+update public.questions set question = 'Do a motorboat on [partner]’s chest. 30 seconds 🍒', voor_partner = 'female' where question like 'Do motorboat on [partner]%';
+update public.questions set question = 'Ride [partner] cowgirl/cowboy style, fully clothed, for 30 seconds 🍑' where question like 'Do the cowgirl on [partner]%';
+update public.questions set question = 'Re-enact scissoring/grinding with [partner] for at least 20 seconds 🍑' where question like 'Re-enact scissoring with [partner] for at least 20 seconds%';
+update public.questions set question = 'Who here is a future MILF/DILF? 😏' where question like 'Who is a future MILF or DILF?%';
+update public.questions set question = 'Time for bump and grind… take off your pants and sit on [partner]’s face (faceride). Feeling cheeky? Slide your undies to the side 💦' where question like 'Time for bump and grind… take of your pants and faceride [partner].%';
+commit;

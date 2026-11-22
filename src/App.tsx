@@ -1,22 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Share2, ArrowLeft, XCircle } from 'lucide-react';
-import GameCard from './components/GameCard';
-import Button from './components/Button';
-import PlayerList from './components/PlayerList';
-import MenuBar from './components/MenuBar';
-import Ads from './components/Ads';
-import Contact from './components/Contact';
-import Modal from './components/Modal';
-import ShareMenu from './components/ShareMenu';
-import GameRules from './components/GameRules';
-import ThemeSelector from './components/ThemeSelector';
-import PlayerActions from './components/PlayerActions';
 import FullscreenAd from './components/FullscreenAd';
-import { GameLevel, GameTheme, Player, Question } from './types';
-import { getValidInteractionPartners } from './utils/interactionRules';
-import { selectQuestion, resetSeenQuestions } from './utils/questionSelector';
+import ShareMenu from './components/ShareMenu';
 import AgeGate from './components/AgeGate';
-import InfoModal from './components/InfoModal';
+import TabBar, { Tab } from './components/TabBar';
+import { Btn, Sheet, LEVEL_EMOJI } from './components/ui';
+import { EditionPicker, PlayerSetup } from './screens/PlayScreens';
+import GameScreen from './screens/GameScreen';
+import Social from './screens/Social';
+import Deals from './screens/Deals';
+import More from './screens/More';
+import { GameLevel, GameTheme, Player, Question } from './types';
+import { selectQuestion, resetSeenQuestions } from './utils/questionSelector';
+import { usePlace } from './utils/geo';
 import { track } from './utils/analytics';
 const App: React.FC = () => {
   const [ageConfirmed, setAgeConfirmed] = useState<boolean>(() => {
@@ -25,22 +20,26 @@ const App: React.FC = () => {
   const [showInitialAd, setShowInitialAd] = useState(true);
   const [gameType, setGameType] = useState<'truth' | 'dare' | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
-  const [players, setPlayers] = useState<Player[]>([]);
+  const [players, setPlayers] = useState<Player[]>(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem('players') || '[]');
+      return Array.isArray(saved) ? saved.map((p: Player) => ({ ...p, questionsAnswered: 0, jokersLeft: 1, passesLeft: 2 })) : [];
+    } catch { return []; }
+  });
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState<number>(0);
-  const [activeTab, setActiveTab] = useState<'home' | 'ads' | 'contact'>('home');
+  const [activeTab, setActiveTab] = useState<Tab>('play');
+  const [place, setPlace] = usePlace();
+  const [levelToast, setLevelToast] = useState<GameLevel | null>(null);
+  const [showHeadsUp, setShowHeadsUp] = useState<boolean>(() => { try { return localStorage.getItem('headsup_seen') !== '1'; } catch { return true; } });
   const [gameLevel, setGameLevel] = useState<GameLevel>('Sweet');
   const [gameTheme, setGameTheme] = useState<GameTheme>('friends');
   const [gameStartTime, setGameStartTime] = useState<number | null>(null);
   const [isGameActive, setIsGameActive] = useState<boolean>(false);
   const [countdown, setCountdown] = useState<number>(30);
-  const [showStopGameModal, setShowStopGameModal] = useState<boolean>(false);
   const [showShareMenu, setShowShareMenu] = useState<boolean>(false);
   const [showRules, setShowRules] = useState<boolean>(false);
-  const [hasUnlockedRewards, setHasUnlockedRewards] = useState<boolean>(false);
   const [showThemeSelection, setShowThemeSelection] = useState<boolean>(true);
   const [timerStarted, setTimerStarted] = useState<boolean>(false);
-  const [selectedPartner, setSelectedPartner] = useState<Player | null>(null);
-  const [showInfoModal, setShowInfoModal] = useState<boolean>(true);
   useEffect(() => {
     if (isGameActive && gameStartTime) {
       const checkGameLevel = () => {
@@ -51,15 +50,18 @@ const App: React.FC = () => {
         const allPlayersAnsweredFour = players.every(p => p.questionsAnswered >= 8);
         if ((timeElapsed >= 20 * 60 * 1000 || allPlayersAnsweredTwice) && gameLevel === 'Sweet') {
           setGameLevel('Sexy');
-          setHasUnlockedRewards(true);
+          setLevelToast('Sexy');
+          
           track('level_up', { level: 'Sexy', theme: gameTheme });
         } else if ((timeElapsed >= 40 * 60 * 1000 || allPlayersAnsweredThrice) && gameLevel === 'Sexy') {
           setGameLevel('Spicy');
-          setHasUnlockedRewards(true);
+          setLevelToast('Spicy');
+          
           track('level_up', { level: 'Spicy', theme: gameTheme });
         } else if ((timeElapsed >= 60 * 60 * 1000 || allPlayersAnsweredFour) && gameLevel === 'Spicy') {
           setGameLevel('Wet & Wild');
-          setHasUnlockedRewards(true);
+          setLevelToast('Wet & Wild');
+          
           track('level_up', { level: 'Wet & Wild', theme: gameTheme });
         }
       };
@@ -84,6 +86,17 @@ const App: React.FC = () => {
     }
     return () => clearInterval(timer);
   }, [isGameActive, currentQuestion, timerStarted, gameType,players]);
+
+  // Spelers onthouden op dit apparaat (alleen naam, geslacht, geaardheid)
+  useEffect(() => {
+    try { localStorage.setItem('players', JSON.stringify(players.map(({ name, gender, orientation }) => ({ name, gender, orientation })))); } catch { /* ignore */ }
+  }, [players]);
+
+  useEffect(() => {
+    if (!levelToast) return;
+    const t = setTimeout(() => setLevelToast(null), 2500);
+    return () => clearTimeout(t);
+  }, [levelToast]);
 
   // playerIndex meegeven: na setCurrentPlayerIndex is de state nog niet bijgewerkt,
   // waardoor de kaart anders voor de VORIGE speler werd gekozen.
@@ -114,7 +127,6 @@ const App: React.FC = () => {
     setGameType(type);
     setCurrentQuestion(newQuestion);
     setCountdown(newQuestion.timer || 30); // Use question's timer or default to 30 seconds
-    setSelectedPartner(null);
     setTimerStarted(false);
   };
 
@@ -147,8 +159,6 @@ const App: React.FC = () => {
   const startGame = () => {
     if (players.length >= 2) {
       setShowRules(true);
-    } else {
-      alert('Please add at least 2 players to start the game!');
     }
   };
 
@@ -187,7 +197,6 @@ const App: React.FC = () => {
         passesLeft: 2
       }))
     );
-    setShowStopGameModal(false);
   };
 
   const moveToNextPlayer = () => {
@@ -244,217 +253,111 @@ const App: React.FC = () => {
     return <FullscreenAd onComplete={() => setShowInitialAd(false)} />;
   }
 
-  const renderContent = () => {
-    switch (activeTab) {
-      case 'home':
-        return (
-          <>
-            {showThemeSelection ? (
-              <ThemeSelector
-                currentTheme={gameTheme}
-                onThemeChange={(theme) => {
-                  setGameTheme(theme);
-                  track('theme_selected', { theme });
-                  setShowThemeSelection(false);
-                }}
-                disabled={isGameActive}
-              />
-            ) : (
-              <>
-                <div className="flex justify-between items-center">
-                  {isGameActive ? (
-                    <Button
-                      onClick={() => setShowStopGameModal(true)}
-                      color="red"
-                      className="!p-3 !px-3"
-                    >
-                      <XCircle size={24} />
-                    </Button>
-                  ) : (
-                    <Button
-                      onClick={() => setShowThemeSelection(true)}
-                      color="red"
-                      className="!p-3 !px-3"
-                    >
-                      <ArrowLeft size={24} />
-                    </Button>
-                  )}
-                  <Button 
-                    onClick={() => setShowShareMenu(true)} 
-                    color="orange"
-                    className="!p-3 !px-3"
-                  >
-                    <Share2 size={24} />
-                  </Button>
-                </div>
+  const inGame = isGameActive && !!gameType && !!currentQuestion;
 
-                {players.length > 0 ? (
-                  <>
-                    <div className="text-center ">
-                      <span className="inline-block px-3 py-1 mb-4 rounded-full text-sm font-semibold" 
-                        style={{
-                          backgroundColor: gameLevel === 'Sweet' ? '#E5E7EB' : 
-                                         gameLevel === 'Hot' ? '#FECACA' : 
-                                         '#FCA5A5',
-                          color: gameLevel === 'Sweet' ? '#374151' : '#991B1B'
-                        }}>
-                        Level: {gameLevel}
-                      </span>
-                    </div>
-{!isGameActive && players.length > 1 ? (
-                      <div className="text-center">
-                        <p className="text-gray-600 mb-6 mt-6">
-                          Click Start to begin the game!
-                        </p>
-                        </div>
-    ): null}
-                  </>
-                ) : (
-                  <p className="text-center text-gray-600 mb-6">Add players to start the game!</p>
-                )}
-                
-                <div className="mt-8">
-                  
+  const share = async () => {
+    const shareData = { title: 'Lick or Lie', text: 'Truth or dare, for grown-ups 😈', url: 'https://lickorlie.com' };
+    try {
+      if (navigator.share) { await navigator.share(shareData); track('share', { platform: 'native' }); }
+      else setShowShareMenu(true);
+    } catch { /* geannuleerd */ }
+  };
 
-                </div>
-                                    
-                    {!isGameActive && players.length > 1  ? null: gameType && currentQuestion ? (
-                      <>
-                        <GameCard 
-                          type={gameType}
-                          question={currentQuestion}
-                          currentPlayer={players[currentPlayerIndex]}
-                          allPlayers={players}
-                          countdown={gameType === 'dare' ? countdown : undefined}
-                          timerStarted={timerStarted}
-                          onStartTimer={gameType === 'dare' ? () => setTimerStarted(true) : undefined}
-                          onSelectPartner={setSelectedPartner}
-                        />
-                        <PlayerActions
-                          onUseJoker={handleUseJoker}
-                          onUsePass={handleUsePass}
-                          jokersLeft={players[currentPlayerIndex].jokersLeft}
-                          passesLeft={players[currentPlayerIndex].passesLeft}
-                        />
-                        <div className="mt-4 text-center">
-                          <Button onClick={moveToNextPlayer} color="green" 
-                                                      disabled={gameType === 'dare' && timerStarted ? true:false}
->
-                            Next Player
-                          </Button>
-                        </div>
-                      </>
-                    ) : null}
-                                      <PlayerList 
-                    players={players} 
-                    addPlayer={addPlayer}
-                    updatePlayer={updatePlayer}
-                    removePlayer={removePlayer}
-                    isGameActive={isGameActive}
-                    currentPlayerIndex={currentPlayerIndex}
-                  />
-                  {!isGameActive && players.length > 1  ? (
-                      <div className="text-center mb-4">
-                        {/* <p className="text-gray-600 mb-6 mt-6">
-                          Click Start to begin the game!
-                        </p> */}
-                        <Button onClick={startGame} color="green" className='mt-5'>
-                          Start Game
-                        </Button>
-                      </div>
-                    ) : null}
-              </>
-            )}
-
-            {showRules && (
-              <GameRules onClose={handleStartGameAfterRules} />
-            )}
-
-            <Modal
-              isOpen={showStopGameModal}
-              onClose={() => setShowStopGameModal(false)}
-              title="Stop Game"
-            >
-              <div className="p-4">
-                <p className="mb-4">Are you sure you want to stop the game? All progress will be lost.</p>
-                <div className="flex justify-end gap-2">
-                  <Button onClick={() => setShowStopGameModal(false)} color="gray">
-                    Cancel
-                  </Button>
-                  
-                  <Button onClick={()=>{stopGame();players.forEach(()=>players.pop());localStorage.setItem('players', JSON.stringify([]));removePlayer(0);}} color="red">
-                    Stop Game
-                  </Button>
-                </div>
-              </div>
-            </Modal>
-
-            <ShareMenu
-              isOpen={showShareMenu}
-              onClose={() => setShowShareMenu(false)}
-              onShare={async (platform) => {
-                track('share', { platform });
-                const shareText = "Join me for an exciting game of Truth or Dare! 🎲";
-                const shareUrl = "https://lickorlie.com"//window.location.href;
-                const shareData = {
-                    title: "Truth or Dare Game",
-                    text: shareText,
-                    url: shareUrl
-                  };                
-                const shareLinks = {
-                  whatsapp: `https://wa.me/?text=${encodeURIComponent(`${shareText} ${shareUrl}`)}`,
-                  instagram: `https://www.instagram.com/share?url=${encodeURIComponent(shareUrl)}`,
-                  snapchat: `https://www.snapchat.com/share?url=${encodeURIComponent(shareUrl)}`,
-                  tiktok: `https://www.tiktok.com/share?url=${encodeURIComponent(shareUrl)}`,
-                  sms: `sms:?body=${encodeURIComponent(`${shareText} ${shareUrl}`)}`
-                };
-                if (platform === 'whatsapp') {
-                  window.open(shareLinks.whatsapp, '_blank');
-                } else if (platform === 'instagram') {
-                  await navigator.share(shareData);
-                } else if (platform === 'snapchat') {
-                  await navigator.share(shareData);
-                } else if (platform === 'tiktok') {
-                  await navigator.share(shareData);
-                } else if (platform === 'sms') {
-                  window.open(shareLinks.sms, '_blank');
-                } else if (platform === 'other') {
-                                    await navigator.share(shareData);
-                }
-                setShowShareMenu(false);
-              }}
-            />
-          </>
-        );
-      case 'ads':
-        return <Ads />;
-      case 'contact':
-        return <Contact />;
-      default:
-        return null;
+  const renderPlay = () => {
+    if (inGame && currentQuestion && gameType) {
+      return (
+        <GameScreen
+          type={gameType}
+          question={currentQuestion}
+          players={players}
+          currentPlayerIndex={currentPlayerIndex}
+          level={gameLevel}
+          countdown={countdown}
+          timerStarted={timerStarted}
+          onStartTimer={() => setTimerStarted(true)}
+          onNext={moveToNextPlayer}
+          onJoker={handleUseJoker}
+          onPass={handleUsePass}
+          onStop={stopGame}
+        />
+      );
     }
+    if (showThemeSelection) {
+      return (
+        <EditionPicker
+          onShare={share}
+          onPick={(theme: GameTheme) => {
+            setGameTheme(theme);
+            track('theme_selected', { theme });
+            setShowThemeSelection(false);
+          }}
+        />
+      );
+    }
+    return (
+      <PlayerSetup
+        players={players}
+        onAdd={addPlayer}
+        onUpdate={updatePlayer}
+        onRemove={removePlayer}
+        onRemoveAll={() => setPlayers([])}
+        onBack={() => setShowThemeSelection(true)}
+        onStart={startGame}
+      />
+    );
   };
 
   return (
-    <>
-    {/* Show Info Modal before Game */}
-    <InfoModal isOpen={showInfoModal} onClose={() => setShowInfoModal(false)} />
-    <div className="min-h-screen bg-gradient-to-br from-violet-600 via-fuchsia-500 to-orange-500 flex flex-col">
-      <MenuBar 
-        activeTab={activeTab} 
-        setActiveTab={setActiveTab}
-        hasUnlockedRewards={hasUnlockedRewards} 
-      />
-      <div className="flex-grow flex items-center justify-center p-4 pb-20">
-        <div className="bg-white/90 backdrop-blur-lg rounded-3xl shadow-2xl p-8 max-w-md w-full border border-white/20">
-          <h1 className="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-violet-600 to-orange-500 text-transparent bg-clip-text">
-            Truth or Dare <span className="text-black">👅</span>
-          </h1>
-          {renderContent()}
+    <div className="h-screen-safe flex flex-col bg-cream text-ink overflow-hidden">
+      <main className="flex-1 min-h-0">
+        {activeTab === 'play' && renderPlay()}
+        {activeTab === 'social' && <Social place={place} onPlace={setPlace} />}
+        {activeTab === 'deals' && <Deals place={place} onPlace={setPlace} />}
+        {activeTab === 'more' && <More />}
+      </main>
+
+      {/* Menubalk: overal, behalve tijdens een lopend spel */}
+      {!(activeTab === 'play' && inGame) && <TabBar active={activeTab} onChange={t => { setActiveTab(t); track('tab_open', { tab: t }); }} />}
+
+      {/* Spelregels vlak voor de start */}
+      <Sheet open={showRules} onClose={() => setShowRules(false)} title="Before you start 😈">
+        <ul className="space-y-2.5 text-[15px] mb-5">
+          <li><b>Truth 🤭</b> <span className="text-muted">Answer honestly.</span></li>
+          <li><b>Dare 😈</b> <span className="text-muted">Go all in, or use a pass or joker.</span></li>
+          <li><b>2 passes, 1 joker</b> <span className="text-muted">per player. No is a full answer.</span></li>
+          <li><b>Levels</b> <span className="text-muted">Sweet 🍒 → Sexy 🍑 → Spicy 🥵 → Wet &amp; Wild 💦</span></li>
+          <li><b>Consent</b> <span className="text-muted">Agree on a safeword. Anyone can stop at any time.</span></li>
+        </ul>
+        <Btn variant="primary" full onClick={handleStartGameAfterRules}>Let's play</Btn>
+      </Sheet>
+
+      {/* Eenmalige uitleg over geslacht/geaardheid */}
+      <Sheet open={showHeadsUp && activeTab === 'play' && !showThemeSelection && !inGame} onClose={() => { setShowHeadsUp(false); try { localStorage.setItem('headsup_seen', '1'); } catch { /* ignore */ } }} title="Quick heads-up 🫣">
+        <p className="text-muted mb-4">To match dares correctly, the game uses man or woman, and straight or bi. Full inclusivity isn't possible yet, but we're working on it.</p>
+        <Btn full onClick={() => { setShowHeadsUp(false); try { localStorage.setItem('headsup_seen', '1'); } catch { /* ignore */ } }}>Got it</Btn>
+      </Sheet>
+
+      {/* Level up-melding */}
+      {levelToast && (
+        <div className="fixed top-4 inset-x-0 z-50 flex justify-center pointer-events-none">
+          <div className="bg-ink text-cream rounded-full px-4 py-2 text-sm font-semibold shadow-card">Level up: {levelToast} {LEVEL_EMOJI[levelToast]}</div>
         </div>
-      </div>
+      )}
+
+      <ShareMenu
+        isOpen={showShareMenu}
+        onClose={() => setShowShareMenu(false)}
+        onShare={async (platform) => {
+          const shareText = 'Truth or dare, for grown-ups 😈';
+          const shareUrl = 'https://lickorlie.com';
+          track('share', { platform });
+          if (platform === 'whatsapp') window.open(`https://wa.me/?text=${encodeURIComponent(`${shareText} ${shareUrl}`)}`, '_blank');
+          else if (platform === 'sms') window.open(`sms:?body=${encodeURIComponent(`${shareText} ${shareUrl}`)}`, '_blank');
+          else { try { await navigator.share({ title: 'Lick or Lie', text: shareText, url: shareUrl }); } catch { /* ignore */ } }
+          setShowShareMenu(false);
+        }}
+      />
     </div>
-    </>
   );
 };
 
