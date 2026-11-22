@@ -36,7 +36,7 @@ const GameCard: React.FC<GameCardProps> = ({
         // Randomly select a partner from valid partners
         const randomPartner = validPartners[Math.floor(Math.random() * validPartners.length)];
         onSelectPartner(randomPartner);
-        setDisplayText(question.text.replace(/\[partner\]/g, randomPartner.name));
+        setDisplayText(question.text.replace(/\[partner\]/gi, randomPartner.name));
       }
     } else {
       setDisplayText(question.text);
