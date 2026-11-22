@@ -86,6 +86,10 @@ const FullscreenAd: React.FC<FullscreenAdProps> = ({ onComplete }) => {
             target="_blank"
             rel="noopener noreferrer"
             className="block group"
+            onClick={(e) => {
+              e.stopPropagation();
+              track('sponsor_click', { placement: 'fullscreen', sponsor: String(adData.title ?? '') });
+            }}
           >
             <div className="bg-white rounded-xl overflow-hidden shadow-lg transform transition-all duration-300 hover:scale-105">
               <div className="relative h-48">

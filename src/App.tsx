@@ -14,10 +14,14 @@ import PlayerActions from './components/PlayerActions';
 import FullscreenAd from './components/FullscreenAd';
 import { GameLevel, GameTheme, Player, Question } from './types';
 import { getValidInteractionPartners } from './utils/interactionRules';
-import { selectQuestion } from './utils/questionSelector';
+import { selectQuestion, resetSeenQuestions } from './utils/questionSelector';
+import AgeGate from './components/AgeGate';
 import InfoModal from './components/InfoModal';
 import { track } from './utils/analytics';
 const App: React.FC = () => {
+  const [ageConfirmed, setAgeConfirmed] = useState<boolean>(() => {
+    try { return localStorage.getItem('age_confirmed') === '1'; } catch { return false; }
+  });
   const [showInitialAd, setShowInitialAd] = useState(true);
   const [gameType, setGameType] = useState<'truth' | 'dare' | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
@@ -158,6 +162,7 @@ const App: React.FC = () => {
   };
 
   const stopGame = () => {
+    resetSeenQuestions();
     if (gameStartTime) {
       track('game_end', {
         theme: gameTheme,
@@ -218,6 +223,22 @@ const App: React.FC = () => {
     });
     moveToNextPlayer();
   };
+
+  if (!ageConfirmed) {
+    return (
+      <AgeGate
+        onConfirm={() => {
+          try { localStorage.setItem('age_confirmed', '1'); } catch { /* ignore */ }
+          track('age_confirmed');
+          setAgeConfirmed(true);
+        }}
+        onDecline={() => {
+          track('age_declined');
+          window.location.href = 'https://www.google.com';
+        }}
+      />
+    );
+  }
 
   if (showInitialAd) {
     return <FullscreenAd onComplete={() => setShowInitialAd(false)} />;
