@@ -61,16 +61,9 @@ const FullscreenAd: React.FC<FullscreenAdProps> = ({ onComplete }) => {
         >
           <div className="absolute top-4 right-4 flex items-center space-x-2">
             <span className="text-white font-medium">{timeLeft}s</span>
-            {/* Na 3 seconden mag je de advertentie wegklikken */}
-            <button
-              type="button"
-              aria-label="Sluiten"
-              disabled={timeLeft > 7}
-              onClick={() => { setIsVisible(false); setTimeout(onComplete, 300); }}
-              className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center disabled:opacity-30"
-            >
+            <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center">
               <X className="text-white" size={24} />
-            </button>
+            </div>
           </div>
 
           <motion.div
