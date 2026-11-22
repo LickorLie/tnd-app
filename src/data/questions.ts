@@ -1,4 +1,4 @@
-import { GameTheme, GameLevel, Question } from '../types';
+import { GameTheme, GameLevel, Question, GenderTarget } from '../types';
 import { supabase } from '../utils/supabase'
 
 type QuestionType = 'truth' | 'dare';
@@ -12,6 +12,14 @@ type Questions = {
 };
 let initialQuestions: Questions
 
+
+// 'man'/'male' -> male, 'vrouw'/'female' -> female, alles anders -> any
+const normalizeGender = (value: unknown): GenderTarget => {
+  const v = String(value ?? '').trim().toLowerCase();
+  if (v === 'man' || v === 'male') return 'male';
+  if (v === 'vrouw' || v === 'female') return 'female';
+  return 'any';
+};
 
 async function fetchQuestions() {
 const { data,error } = await supabase.from('questions').select()
@@ -108,6 +116,8 @@ if(data) {
       requiresPartner: item.requirespartner,
       type:item.requirespartner === true ? 'partner' : 'solo',
       timer: item.timer || 30,
+      forPlayer: normalizeGender(item.voor_speler),
+      forPartner: normalizeGender(item.voor_partner),
     };
     // console.log('Mapping Question : ', question)
     // console.log('Mapping ID : ', item.id)

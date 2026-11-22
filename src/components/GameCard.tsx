@@ -31,7 +31,7 @@ const GameCard: React.FC<GameCardProps> = ({
 
   useEffect(() => {
     if (question.requiresPartner) {
-      const validPartners = getValidInteractionPartners(currentPlayer, allPlayers);
+      const validPartners = getValidInteractionPartners(currentPlayer, allPlayers, question.forPartner);
       if (validPartners.length > 0) {
         // Randomly select a partner from valid partners
         const randomPartner = validPartners[Math.floor(Math.random() * validPartners.length)];
@@ -60,7 +60,7 @@ const GameCard: React.FC<GameCardProps> = ({
 
   const currentStyle = styles[type];
 
-  const validPartners = getValidInteractionPartners(currentPlayer, allPlayers);
+  const validPartners = getValidInteractionPartners(currentPlayer, allPlayers, question.forPartner);
   const generateRandomTruthQuestion = () => {
     const randomIndex = Math.floor(Math.random() * questions.friends.Sweet.truth.length);
     return questions.friends.Sweet.truth[randomIndex];
