@@ -44,6 +44,8 @@ const GameScreen: React.FC<Props> = ({
 
   const total = question.timer || 30;
   const isDare = type === 'dare';
+  // timer 1 in de database betekent: geen timer
+  const hasTimer = isDare && total > 1;
   const longText = question.text.length > 140;
 
   return (
@@ -72,7 +74,7 @@ const GameScreen: React.FC<Props> = ({
             ) : (
               <span className="font-serif text-[34px] leading-none px-4 py-1 rounded-full bg-blush">Truth 🤭</span>
             )}
-            {isDare && (timerStarted ? (
+            {hasTimer && (timerStarted ? (
               <span className="text-sm font-semibold tabular-nums">{Math.floor(countdown / 60)}:{String(countdown % 60).padStart(2, '0')}</span>
             ) : (
               <button onClick={onStartTimer} className="flex items-center gap-1 text-sm font-semibold text-muted">
@@ -83,7 +85,7 @@ const GameScreen: React.FC<Props> = ({
           <p className={`font-serif font-medium my-auto py-4 overflow-y-auto ${longText ? 'text-[21px] sm:text-[26px]' : 'text-[24px] sm:text-[32px]'} leading-snug`}>
             {parts.map((p, i) => (typeof p === 'string' ? <span key={i}>{p}</span> : <span key={i} className="text-rouge">{p.name}</span>))}
           </p>
-          {isDare && timerStarted && (
+          {hasTimer && timerStarted && (
             <div className="absolute left-0 bottom-0 h-[3px] bg-rouge transition-all duration-1000 ease-linear" style={{ width: `${(countdown / total) * 100}%` }} />
           )}
         </motion.article>
@@ -100,7 +102,7 @@ const GameScreen: React.FC<Props> = ({
         <Btn className="flex-1" disabled={current.jokersLeft === 0} onClick={() => setSheet('joker')}>
           <Shield size={18} strokeWidth={1.5} /> Joker <span className="text-muted font-medium">{current.jokersLeft}</span>
         </Btn>
-        <Btn variant="primary" className="flex-[1.4]" disabled={isDare && timerStarted} onClick={onNext}>
+        <Btn variant="primary" className="flex-[1.4]" disabled={hasTimer && timerStarted} onClick={onNext}>
           Next ›
         </Btn>
       </div>
