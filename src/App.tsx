@@ -307,7 +307,7 @@ const App: React.FC = () => {
                             passesLeft={players[currentPlayerIndex].passesLeft}
                           />
                           <Button onClick={moveToNextPlayer} color="green"
-                            className="w-full sm:w-auto py-4 sm:py-3 text-lg"
+                            className="w-full sm:w-auto py-4 sm:py-3 text-lg whitespace-nowrap"
                             disabled={gameType === 'dare' && timerStarted ? true:false}
                           >
                             Next Player ▶
@@ -423,7 +423,7 @@ const App: React.FC = () => {
         hasUnlockedRewards={hasUnlockedRewards} 
       />
       <div className="flex-grow flex items-start sm:items-center justify-center p-3 sm:p-6 pb-24">
-        <div className="bg-white/90 backdrop-blur-lg rounded-3xl shadow-2xl p-4 sm:p-8 w-full max-w-md md:max-w-xl lg:max-w-2xl border border-white/20">
+        <div className="bg-white/90 backdrop-blur-lg rounded-3xl shadow-2xl p-4 sm:p-8 w-full max-w-md sm:max-w-xl lg:max-w-2xl border border-white/20">
           <h1 className={`${isGameActive ? 'text-2xl mb-3' : 'text-3xl sm:text-4xl mb-6'} font-bold text-center bg-gradient-to-r from-violet-600 to-orange-500 text-transparent bg-clip-text`}>
             Truth or Dare <span className="text-black">👅</span>
           </h1>

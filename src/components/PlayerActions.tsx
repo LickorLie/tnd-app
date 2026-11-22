@@ -42,9 +42,9 @@ const PlayerActions: React.FC<PlayerActionsProps> = ({
         onClick={handleJokerClick}
         color="orange"
         disabled={jokersLeft === 0}
-        className="flex flex-1 sm:flex-none items-center justify-center sm:min-w-[110px]"
+        className="flex flex-1 sm:flex-none items-center justify-center whitespace-nowrap !px-4"
       >
-        <Shield className="mr-2" size={20} />
+        <Shield className="mr-1.5" size={18} />
         <span>
           Joker {jokersLeft === 0 ? '(Used)' : `(${jokersLeft})`}
         </span>
@@ -54,9 +54,9 @@ const PlayerActions: React.FC<PlayerActionsProps> = ({
         onClick={handlePassClick}
         color="red"
         disabled={passesLeft === 0}
-        className="flex flex-1 sm:flex-none items-center justify-center sm:min-w-[110px]"
+        className="flex flex-1 sm:flex-none items-center justify-center whitespace-nowrap !px-4"
       >
-        <SkipForward className="mr-2" size={20} />
+        <SkipForward className="mr-1.5" size={18} />
         <span>
           Pass {passesLeft === 0 ? '(Used)' : `(${passesLeft})`}
         </span>
@@ -135,7 +135,7 @@ const PlayerActions: React.FC<PlayerActionsProps> = ({
               color="orange"
               className="flex items-center"
             >
-              <Shield className="mr-2" size={20} />
+              <Shield className="mr-1.5" size={18} />
               Use Joker
             </Button>
           </div>
@@ -167,7 +167,7 @@ const PlayerActions: React.FC<PlayerActionsProps> = ({
               color="red"
               className="flex items-center"
             >
-              <SkipForward className="mr-2" size={20} />
+              <SkipForward className="mr-1.5" size={18} />
               Use Pass
             </Button>
           </div>
