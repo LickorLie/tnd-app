@@ -17,4 +17,8 @@ export interface Question {
   requiresPartner: boolean;
   type: 'solo' | 'partner';
   timer?: number; // Optional timer for the question
+  forPlayer?: GenderTarget; // wie deze kaart mag krijgen
+  forPartner?: GenderTarget; // welk geslacht [partner] moet hebben
 }
+
+export type GenderTarget = 'any' | Gender;

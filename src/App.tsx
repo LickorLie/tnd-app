@@ -77,8 +77,10 @@ const App: React.FC = () => {
     return () => clearInterval(timer);
   }, [isGameActive, currentQuestion, timerStarted, gameType,players]);
 
-  const generateQuestion = () => {
-    const currentPlayer = players[currentPlayerIndex];
+  // playerIndex meegeven: na setCurrentPlayerIndex is de state nog niet bijgewerkt,
+  // waardoor de kaart anders voor de VORIGE speler werd gekozen.
+  const generateQuestion = (playerIndex: number = currentPlayerIndex) => {
+    const currentPlayer = players[playerIndex];
     const random = Math.random();
     let type: 'truth' | 'dare' = random < 0.35 ? 'truth' : 'dare';
 
@@ -176,8 +178,9 @@ const App: React.FC = () => {
       return newPlayers;
     });
     
-    setCurrentPlayerIndex(prev => (prev + 1) % players.length);
-    generateQuestion();
+    const nextIndex = (currentPlayerIndex + 1) % players.length;
+    setCurrentPlayerIndex(nextIndex);
+    generateQuestion(nextIndex);
 
     setTimerStarted(false);
   };

@@ -1,5 +1,5 @@
 import { Question, Player, GameLevel, GameTheme } from '../types';
-import { calculateQuestionDistribution, getValidInteractionPartners } from './interactionRules';
+import { calculateQuestionDistribution, getValidInteractionPartners, matchesGender } from './interactionRules';
 import { questions } from '../data/questions';
 
 type QuestionType = 'truth' | 'dare';
@@ -41,7 +41,9 @@ export const selectQuestion = (
   gameLevel: GameLevel,
   type: QuestionType
 ): Question | null => {
-  const questionPool = getPoolWithFallback(gameTheme, gameLevel, type);
+  // Alleen kaarten die bij het geslacht van deze speler passen
+  const questionPool = getPoolWithFallback(gameTheme, gameLevel, type)
+    .filter(q => matchesGender(currentPlayer, q.forPlayer));
   const soloQuestions = questionPool.filter(q => !q.requiresPartner);
 
   if (type === 'truth') {
@@ -51,14 +53,12 @@ export const selectQuestion = (
 
   // For dares, consider the distribution and valid partners
   const questionType = calculateQuestionDistribution(currentPlayer, allPlayers);
-  const validPartners = getValidInteractionPartners(currentPlayer, allPlayers);
-
   const availableQuestions = questionPool.filter(q => {
     if (questionType === 'solo') {
       return !q.requiresPartner;
     }
-    // Only include partner questions if there are valid partners
-    return q.requiresPartner && validPartners.length > 0;
+    // Alleen partnerkaarten waarvoor een geschikte partner (juist geslacht + orientatie) aanwezig is
+    return q.requiresPartner && getValidInteractionPartners(currentPlayer, allPlayers, q.forPartner).length > 0;
   });
 
   return pickRandom(availableQuestions) ?? pickRandom(soloQuestions);
