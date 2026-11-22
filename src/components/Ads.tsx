@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ExternalLink } from 'lucide-react';
 import { supabase } from '../utils/supabase';
+import { track } from '../utils/analytics';
 
 const Ads: React.FC = () => {
   // Fetch promotions from Supabase
@@ -57,6 +58,7 @@ const Ads: React.FC = () => {
             target="_blank"
             rel="noopener noreferrer"
             className="block group"
+            onClick={() => track('sponsor_click', { placement: 'offers_tab', sponsor: String(promo.title ?? '') })}
           >
             <div className="bg-white rounded-xl overflow-hidden shadow-lg transform transition-all duration-300 hover:scale-105">
               <div className="relative h-48">

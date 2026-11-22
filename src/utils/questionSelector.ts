@@ -31,8 +31,21 @@ const getPoolWithFallback = (theme: GameTheme, gameLevel: GameLevel, type: Quest
   return [];
 };
 
-const pickRandom = (list: Question[]): Question | null =>
-  list.length > 0 ? list[Math.floor(Math.random() * list.length)] : null;
+// Cards already shown this session; reset when a pool runs out or a game stops.
+const seen = new Set<string>();
+export const resetSeenQuestions = () => seen.clear();
+
+const pickRandom = (list: Question[]): Question | null => {
+  if (list.length === 0) return null;
+  let fresh = list.filter(q => !seen.has(q.text));
+  if (fresh.length === 0) {
+    list.forEach(q => seen.delete(q.text));
+    fresh = list;
+  }
+  const q = fresh[Math.floor(Math.random() * fresh.length)];
+  seen.add(q.text);
+  return q;
+};
 
 export const selectQuestion = (
   currentPlayer: Player,

@@ -14,9 +14,14 @@ import PlayerActions from './components/PlayerActions';
 import FullscreenAd from './components/FullscreenAd';
 import { GameLevel, GameTheme, Player, Question } from './types';
 import { getValidInteractionPartners } from './utils/interactionRules';
-import { selectQuestion } from './utils/questionSelector';
+import { selectQuestion, resetSeenQuestions } from './utils/questionSelector';
+import AgeGate from './components/AgeGate';
 import InfoModal from './components/InfoModal';
+import { track } from './utils/analytics';
 const App: React.FC = () => {
+  const [ageConfirmed, setAgeConfirmed] = useState<boolean>(() => {
+    try { return localStorage.getItem('age_confirmed') === '1'; } catch { return false; }
+  });
   const [showInitialAd, setShowInitialAd] = useState(true);
   const [gameType, setGameType] = useState<'truth' | 'dare' | null>(null);
   const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
@@ -47,12 +52,15 @@ const App: React.FC = () => {
         if ((timeElapsed >= 20 * 60 * 1000 || allPlayersAnsweredTwice) && gameLevel === 'Sweet') {
           setGameLevel('Sexy');
           setHasUnlockedRewards(true);
+          track('level_up', { level: 'Sexy', theme: gameTheme });
         } else if ((timeElapsed >= 40 * 60 * 1000 || allPlayersAnsweredThrice) && gameLevel === 'Sexy') {
           setGameLevel('Spicy');
           setHasUnlockedRewards(true);
+          track('level_up', { level: 'Spicy', theme: gameTheme });
         } else if ((timeElapsed >= 60 * 60 * 1000 || allPlayersAnsweredFour) && gameLevel === 'Spicy') {
           setGameLevel('Wet & Wild');
           setHasUnlockedRewards(true);
+          track('level_up', { level: 'Wet & Wild', theme: gameTheme });
         }
       };
 
@@ -149,10 +157,21 @@ const App: React.FC = () => {
     setShowRules(false);
     setIsGameActive(true);
     setGameStartTime(Date.now());
+    track('game_start', { theme: gameTheme, players: players.length });
     generateQuestion();
   };
 
   const stopGame = () => {
+    resetSeenQuestions();
+    if (gameStartTime) {
+      track('game_end', {
+        theme: gameTheme,
+        level: gameLevel,
+        players: players.length,
+        minutes: Math.round((Date.now() - gameStartTime) / 60000),
+        cards: players.reduce((n, p) => n + p.questionsAnswered, 0),
+      });
+    }
     setGameType(null);
     setCurrentQuestion(null);
     setIsGameActive(false);
@@ -189,6 +208,7 @@ const App: React.FC = () => {
     setPlayers(prevPlayers => {
       const newPlayers = [...prevPlayers];
       newPlayers[currentPlayerIndex].jokersLeft--;
+      track('joker_used', { level: gameLevel });
       return newPlayers;
     });
     moveToNextPlayer();
@@ -198,10 +218,27 @@ const App: React.FC = () => {
     setPlayers(prevPlayers => {
       const newPlayers = [...prevPlayers];
       newPlayers[currentPlayerIndex].passesLeft--;
+      track('pass_used', { level: gameLevel });
       return newPlayers;
     });
     moveToNextPlayer();
   };
+
+  if (!ageConfirmed) {
+    return (
+      <AgeGate
+        onConfirm={() => {
+          try { localStorage.setItem('age_confirmed', '1'); } catch { /* ignore */ }
+          track('age_confirmed');
+          setAgeConfirmed(true);
+        }}
+        onDecline={() => {
+          track('age_declined');
+          window.location.href = 'https://www.google.com';
+        }}
+      />
+    );
+  }
 
   if (showInitialAd) {
     return <FullscreenAd onComplete={() => setShowInitialAd(false)} />;
@@ -217,6 +254,7 @@ const App: React.FC = () => {
                 currentTheme={gameTheme}
                 onThemeChange={(theme) => {
                   setGameTheme(theme);
+                  track('theme_selected', { theme });
                   setShowThemeSelection(false);
                 }}
                 disabled={isGameActive}
@@ -355,6 +393,7 @@ const App: React.FC = () => {
               isOpen={showShareMenu}
               onClose={() => setShowShareMenu(false)}
               onShare={async (platform) => {
+                track('share', { platform });
                 const shareText = "Join me for an exciting game of Truth or Dare! 🎲";
                 const shareUrl = "https://lickorlie.com"//window.location.href;
                 const shareData = {
