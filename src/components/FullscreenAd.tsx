@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ExternalLink, X } from 'lucide-react';
 import { supabase } from '../utils/supabase';
+import { track } from '../utils/analytics';
 
 interface FullscreenAdProps {
   onComplete: () => void;
@@ -24,6 +25,7 @@ const FullscreenAd: React.FC<FullscreenAdProps> = ({ onComplete }) => {
         console.error('Error fetching ad data:', error);
       } else {
         setAdData(data);
+        track('sponsor_view', { placement: 'fullscreen', sponsor: String(data?.title ?? '') });
       }
     };
 
@@ -48,6 +50,8 @@ const FullscreenAd: React.FC<FullscreenAdProps> = ({ onComplete }) => {
   }, [onComplete]);
 
   const handleAdClick = () => {
+    if (!adData) return;
+    track('sponsor_click', { placement: 'fullscreen', sponsor: String(adData.title ?? '') });
     window.open(adData.link, '_blank');
   };
 

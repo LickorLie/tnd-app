@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Button from './Button';
 import { supabase } from '../utils/supabase';
+import { track } from '../utils/analytics';
 
 const Contact: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -30,6 +31,7 @@ const Contact: React.FC = () => {
           alert('There was an error submitting your message. Please try again later.');
         } else {
           console.log('Form submitted successfully:', data);
+          track('contact_submit', { type: formData.type });
           alert('Thank you for your message! We will get back to you soon.');
           setFormData({ name: '', email: '', message: '', type: 'idea' });
         }
