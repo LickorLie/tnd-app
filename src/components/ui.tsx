@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { GameLevel } from '../types';
 
 /* Gedeelde bouwstenen volgens het LickOrLie-brandbook */
@@ -100,11 +101,26 @@ export const Sheet: React.FC<{ open: boolean; onClose: () => void; title?: strin
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
-      <div className="absolute inset-0 bg-ink/40" onClick={onClose} />
-      <div className="relative w-full sm:max-w-md bg-cream rounded-t-card sm:rounded-card p-5 pb-safe max-h-[85dvh] overflow-y-auto">
+      {/* Donkere, wazige achtergrond: alles achter het paneel doet een stap terug */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="absolute inset-0 backdrop-blur-[3px]"
+        style={{ background: 'rgba(26,26,26,0.55)' }}
+        onClick={onClose}
+      />
+      <motion.div
+        initial={{ y: 40, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ type: 'tween', duration: 0.2 }}
+        className="relative w-full sm:max-w-md bg-cream rounded-t-card sm:rounded-card p-5 pt-3 pb-safe max-h-[85dvh] overflow-y-auto shadow-card"
+        role="dialog"
+        aria-modal="true"
+      >
+        <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-sand sm:hidden" />
         {title && <h2 className="font-serif text-2xl font-semibold mb-3">{title}</h2>}
         {children}
-      </div>
+      </motion.div>
     </div>
   );
 };

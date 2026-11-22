@@ -74,17 +74,18 @@ const GameScreen: React.FC<Props> = ({
             ) : (
               <span className="font-serif text-[34px] leading-none px-4 py-1 rounded-full bg-blush">Truth 🤭</span>
             )}
-            {hasTimer && (timerStarted ? (
-              <span className="text-sm font-semibold tabular-nums">{Math.floor(countdown / 60)}:{String(countdown % 60).padStart(2, '0')}</span>
-            ) : (
-              <button onClick={onStartTimer} className="flex items-center gap-1 text-sm font-semibold text-muted">
-                <Timer size={18} strokeWidth={1.5} /> {total}s
-              </button>
-            ))}
+            {hasTimer && timerStarted && (
+              <span className="font-serif text-[34px] leading-none tabular-nums text-rouge">{Math.floor(countdown / 60)}:{String(countdown % 60).padStart(2, '0')}</span>
+            )}
           </div>
           <p className={`font-serif font-medium my-auto py-4 overflow-y-auto ${longText ? 'text-[21px] sm:text-[26px]' : 'text-[24px] sm:text-[32px]'} leading-snug`}>
             {parts.map((p, i) => (typeof p === 'string' ? <span key={i}>{p}</span> : <span key={i} className="text-rouge">{p.name}</span>))}
           </p>
+          {hasTimer && !timerStarted && (
+            <button onClick={onStartTimer} className="self-start flex items-center gap-2 h-11 px-4 rounded-full bg-blush font-semibold text-[15px]">
+              <Timer size={18} strokeWidth={1.5} /> Start {Math.floor(total / 60)}:{String(total % 60).padStart(2, '0')} timer
+            </button>
+          )}
           {hasTimer && timerStarted && (
             <div className="absolute left-0 bottom-0 h-[3px] bg-rouge transition-all duration-1000 ease-linear" style={{ width: `${(countdown / total) * 100}%` }} />
           )}
@@ -102,8 +103,8 @@ const GameScreen: React.FC<Props> = ({
         <Btn className="flex-1" disabled={current.jokersLeft === 0} onClick={() => setSheet('joker')}>
           <Shield size={18} strokeWidth={1.5} /> Joker <span className="text-muted font-medium">{current.jokersLeft}</span>
         </Btn>
-        <Btn variant="primary" className="flex-[1.4]" disabled={hasTimer && timerStarted} onClick={onNext}>
-          Next ›
+        <Btn variant="primary" className="flex-[1.4]" onClick={onNext}>
+          {hasTimer && timerStarted ? 'Done ✓' : 'Next ›'}
         </Btn>
       </div>
 
