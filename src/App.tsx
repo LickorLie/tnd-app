@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Share2, ArrowLeft, XCircle } from 'lucide-react';
+import { Share2, ArrowLeft, XCircle, Users } from 'lucide-react';
 import GameCard from './components/GameCard';
 import Button from './components/Button';
 import PlayerList from './components/PlayerList';
@@ -16,6 +16,7 @@ import { GameLevel, GameTheme, Player, Question } from './types';
 import { getValidInteractionPartners } from './utils/interactionRules';
 import { selectQuestion } from './utils/questionSelector';
 import InfoModal from './components/InfoModal';
+import PlayerListModal from './components/PlayerListModal';
 const App: React.FC = () => {
   const [showInitialAd, setShowInitialAd] = useState(true);
   const [gameType, setGameType] = useState<'truth' | 'dare' | null>(null);
@@ -30,6 +31,7 @@ const App: React.FC = () => {
   const [countdown, setCountdown] = useState<number>(30);
   const [showStopGameModal, setShowStopGameModal] = useState<boolean>(false);
   const [showShareMenu, setShowShareMenu] = useState<boolean>(false);
+  const [showPlayersModal, setShowPlayersModal] = useState<boolean>(false);
   const [showRules, setShowRules] = useState<boolean>(false);
   const [hasUnlockedRewards, setHasUnlockedRewards] = useState<boolean>(false);
   const [showThemeSelection, setShowThemeSelection] = useState<boolean>(true);
@@ -223,14 +225,14 @@ const App: React.FC = () => {
               />
             ) : (
               <>
-                <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center gap-2 mb-4">
                   {isGameActive ? (
                     <Button
                       onClick={() => setShowStopGameModal(true)}
                       color="red"
                       className="!p-3 !px-3"
                     >
-                      <XCircle size={24} />
+                      <XCircle size={22} />
                     </Button>
                   ) : (
                     <Button
@@ -238,31 +240,40 @@ const App: React.FC = () => {
                       color="red"
                       className="!p-3 !px-3"
                     >
-                      <ArrowLeft size={24} />
+                      <ArrowLeft size={22} />
                     </Button>
                   )}
-                  <Button 
-                    onClick={() => setShowShareMenu(true)} 
-                    color="orange"
-                    className="!p-3 !px-3"
-                  >
-                    <Share2 size={24} />
-                  </Button>
+                  {players.length > 0 && (
+                    <span className="px-3 py-1 rounded-full text-sm font-semibold"
+                      style={{
+                        backgroundColor: gameLevel === 'Sweet' ? '#E5E7EB' : '#FCA5A5',
+                        color: gameLevel === 'Sweet' ? '#374151' : '#991B1B'
+                      }}>
+                      {gameLevel} {gameLevel === 'Sweet' ? '🍬' : gameLevel === 'Sexy' ? '🔥' : gameLevel === 'Spicy' ? '🌶️' : '💦'}
+                    </span>
+                  )}
+                  <div className="flex gap-2">
+                    {isGameActive && (
+                      <Button
+                        onClick={() => setShowPlayersModal(true)}
+                        color="orange"
+                        className="!p-3 !px-3"
+                      >
+                        <Users size={22} />
+                      </Button>
+                    )}
+                    <Button
+                      onClick={() => setShowShareMenu(true)}
+                      color="orange"
+                      className="!p-3 !px-3"
+                    >
+                      <Share2 size={22} />
+                    </Button>
+                  </div>
                 </div>
 
                 {players.length > 0 ? (
                   <>
-                    <div className="text-center ">
-                      <span className="inline-block px-3 py-1 mb-4 rounded-full text-sm font-semibold" 
-                        style={{
-                          backgroundColor: gameLevel === 'Sweet' ? '#E5E7EB' : 
-                                         gameLevel === 'Hot' ? '#FECACA' : 
-                                         '#FCA5A5',
-                          color: gameLevel === 'Sweet' ? '#374151' : '#991B1B'
-                        }}>
-                        Level: {gameLevel}
-                      </span>
-                    </div>
 {!isGameActive && players.length > 1 ? (
                       <div className="text-center">
                         <p className="text-gray-600 mb-6 mt-6">
@@ -275,10 +286,6 @@ const App: React.FC = () => {
                   <p className="text-center text-gray-600 mb-6">Add players to start the game!</p>
                 )}
                 
-                <div className="mt-8">
-                  
-
-                </div>
                                     
                     {!isGameActive && players.length > 1  ? null: gameType && currentQuestion ? (
                       <>
@@ -292,27 +299,36 @@ const App: React.FC = () => {
                           onStartTimer={gameType === 'dare' ? () => setTimerStarted(true) : undefined}
                           onSelectPartner={setSelectedPartner}
                         />
-                        <PlayerActions
-                          onUseJoker={handleUseJoker}
-                          onUsePass={handleUsePass}
-                          jokersLeft={players[currentPlayerIndex].jokersLeft}
-                          passesLeft={players[currentPlayerIndex].passesLeft}
-                        />
-                        <div className="mt-4 text-center">
-                          <Button onClick={moveToNextPlayer} color="green" 
-                                                      disabled={gameType === 'dare' && timerStarted ? true:false}
->
-                            Next Player
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3">
+                          <PlayerActions
+                            onUseJoker={handleUseJoker}
+                            onUsePass={handleUsePass}
+                            jokersLeft={players[currentPlayerIndex].jokersLeft}
+                            passesLeft={players[currentPlayerIndex].passesLeft}
+                          />
+                          <Button onClick={moveToNextPlayer} color="green"
+                            className="w-full sm:w-auto py-4 sm:py-3 text-lg"
+                            disabled={gameType === 'dare' && timerStarted ? true:false}
+                          >
+                            Next Player ▶
                           </Button>
                         </div>
                       </>
                     ) : null}
-                                      <PlayerList 
+                  {!isGameActive && (
+                  <PlayerList 
                     players={players} 
                     addPlayer={addPlayer}
                     updatePlayer={updatePlayer}
                     removePlayer={removePlayer}
                     isGameActive={isGameActive}
+                    currentPlayerIndex={currentPlayerIndex}
+                  />
+                  )}
+                  <PlayerListModal
+                    isOpen={showPlayersModal}
+                    onClose={() => setShowPlayersModal(false)}
+                    players={players}
                     currentPlayerIndex={currentPlayerIndex}
                   />
                   {!isGameActive && players.length > 1  ? (
@@ -406,9 +422,9 @@ const App: React.FC = () => {
         setActiveTab={setActiveTab}
         hasUnlockedRewards={hasUnlockedRewards} 
       />
-      <div className="flex-grow flex items-center justify-center p-4 pb-20">
-        <div className="bg-white/90 backdrop-blur-lg rounded-3xl shadow-2xl p-8 max-w-md w-full border border-white/20">
-          <h1 className="text-4xl font-bold text-center mb-8 bg-gradient-to-r from-violet-600 to-orange-500 text-transparent bg-clip-text">
+      <div className="flex-grow flex items-start sm:items-center justify-center p-3 sm:p-6 pb-24">
+        <div className="bg-white/90 backdrop-blur-lg rounded-3xl shadow-2xl p-4 sm:p-8 w-full max-w-md md:max-w-xl lg:max-w-2xl border border-white/20">
+          <h1 className={`${isGameActive ? 'text-2xl mb-3' : 'text-3xl sm:text-4xl mb-6'} font-bold text-center bg-gradient-to-r from-violet-600 to-orange-500 text-transparent bg-clip-text`}>
             Truth or Dare <span className="text-black">👅</span>
           </h1>
           {renderContent()}

@@ -37,12 +37,12 @@ const PlayerActions: React.FC<PlayerActionsProps> = ({
   };
 
   return (
-    <div className="flex justify-center gap-4 mt-4">
+    <div className="flex justify-center gap-3 w-full sm:w-auto">
       <Button
         onClick={handleJokerClick}
         color="orange"
         disabled={jokersLeft === 0}
-        className="flex items-center justify-center min-w-[120px]"
+        className="flex flex-1 sm:flex-none items-center justify-center sm:min-w-[110px]"
       >
         <Shield className="mr-2" size={20} />
         <span>
@@ -54,7 +54,7 @@ const PlayerActions: React.FC<PlayerActionsProps> = ({
         onClick={handlePassClick}
         color="red"
         disabled={passesLeft === 0}
-        className="flex items-center justify-center min-w-[120px]"
+        className="flex flex-1 sm:flex-none items-center justify-center sm:min-w-[110px]"
       >
         <SkipForward className="mr-2" size={20} />
         <span>

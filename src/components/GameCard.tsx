@@ -75,17 +75,17 @@ const GameCard: React.FC<GameCardProps> = ({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       className={`bg-gradient-to-br from-pink-400 via-rose-500 to-purple-600 *:text-white border-pink-300 
-        border-2 rounded-2xl p-6 mb-6 shadow-xl backdrop-blur-sm`}
+        border-2 rounded-2xl p-5 sm:p-8 mb-4 sm:mb-6 shadow-xl backdrop-blur-sm min-h-[45vh] sm:min-h-0 flex flex-col justify-center`}
     >
-      <h2 className="text-3xl font-bold mb-4 capitalize flex items-center justify-center">
+      <h2 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4 capitalize flex items-center justify-center">
         No Truth 🤔
       </h2>
       
-      <p className="text-xl mb-6 text-center font-medium">{ randomTruth.text }</p>
+      <p className="text-lg sm:text-2xl leading-snug mb-6 text-center font-medium break-words">{ randomTruth.text }</p>
       
-      <div className="flex justify-between items-center mt-4">
-        {currentPlayer.gender==="male"?<p className="text-lg font-semibold rounded-md bg-blue-400 text-white px-4">"{currentPlayer.name}, it’s your turn now!”</p>:
-        <p className="text-lg font-semibold rounded-md bg-pink-400 text-white px-4">"{currentPlayer.name}, it’s your turn now!”</p>}
+      <div className="flex flex-wrap gap-2 justify-between items-center mt-4">
+        {currentPlayer.gender==="male"?<p className="text-base sm:text-lg font-semibold rounded-full py-1 bg-blue-400 text-white px-4">{currentPlayer.name}, it’s your turn!</p>:
+        <p className="text-base sm:text-lg font-semibold rounded-full py-1 bg-pink-400 text-white px-4">{currentPlayer.name}, it’s your turn!</p>}
 
       </div>
       
@@ -115,13 +115,13 @@ const GameCard: React.FC<GameCardProps> = ({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       className={`${currentStyle.background} ${currentStyle.text} ${currentStyle.border} 
-        border-2 rounded-2xl p-6 mb-6 shadow-xl backdrop-blur-sm`}
+        border-2 rounded-2xl p-5 sm:p-8 mb-4 sm:mb-6 shadow-xl backdrop-blur-sm min-h-[45vh] sm:min-h-0 flex flex-col justify-center`}
     >
-      <h2 className="text-3xl font-bold mb-4 capitalize flex items-center justify-center">
+      <h2 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4 capitalize flex items-center justify-center">
         {type} {currentStyle.emoji}
       </h2>
       
-      <p className="text-xl mb-6 text-center font-medium">{displayText}</p>
+      <p className="text-lg sm:text-2xl leading-snug mb-6 text-center font-medium break-words">{displayText}</p>
       
       {type === 'dare' && !timerStarted && onStartTimer && (
         <div className="flex justify-center mb-6">
@@ -136,9 +136,9 @@ const GameCard: React.FC<GameCardProps> = ({
         </div>
       )}
       
-      <div className="flex justify-between items-center mt-4">
-        {currentPlayer.gender==="male"?<p className="text-lg font-semibold rounded-md bg-blue-400 text-white px-4">"{currentPlayer.name}, it’s your turn now!”</p>:
-        <p className="text-lg font-semibold rounded-md bg-pink-400 text-white px-4">"{currentPlayer.name}, it’s your turn now!”</p>}
+      <div className="flex flex-wrap gap-2 justify-between items-center mt-4">
+        {currentPlayer.gender==="male"?<p className="text-base sm:text-lg font-semibold rounded-full py-1 bg-blue-400 text-white px-4">{currentPlayer.name}, it’s your turn!</p>:
+        <p className="text-base sm:text-lg font-semibold rounded-full py-1 bg-pink-400 text-white px-4">{currentPlayer.name}, it’s your turn!</p>}
         {type === 'dare' && timerStarted && (
           <span className="text-lg font-bold">
             {countdown}s ⏱️
