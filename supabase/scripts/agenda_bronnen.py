@@ -10,8 +10,7 @@ P=[ # name, city, country, region, category, url, lat, lng, desc
 ("Club Paradise","Amsterdam","NL","Noord-Holland","Club","https://club-paradise.nl/events/",52.39,4.89,"Amsterdam club with sauna, steam bath, dance floor and play areas."),
 ("Sameplace","Amsterdam","NL","Noord-Holland","Bar","https://sameplace.nl/agenda/",52.37,4.87,"Erotic café since 1997 with bar, dance floor and basement play rooms."),
 ("Eroroma","Zwinderen","NL","Drenthe","Club","https://eroroma.nl/pages/nl/de-parenclub.php",52.70,6.68,"Couples club with Roman bath theme and jacuzzis."),
-("Kasteel Waterloo","Swalmen (approx.)","NL","Limburg","Club","https://kasteelwaterloo.nl/",51.23,6.03,"Erotic club in Midden-Limburg for couples, singles and trios."),
-("Pleasure2gether","Limburg","NL","Limburg","Club","https://www.pleasure2gether.nl/kalender.php",None,None,"Couples and singles club with bar, relax rooms and weekend buffet."),
+("Pleasure2gether","Sittard","NL","Limburg","Club","https://www.pleasure2gether.nl/kalender.php",51.01,5.86,"Couples and singles club with bar, relax rooms and weekend buffet."),
 ("Stiletto-Club","Tilburg","NL","Noord-Brabant","Party","https://www.stiletto-club.nl/",51.56,5.09,"Themed party nights at DHG Tilburg."),
 ("Kinky On The Beach","Culemborg","NL","Gelderland","Party","https://www.kinkyonthebeach.eu/site/",51.95,5.23,"Kinky parties with strict leather, latex and rubber dress code."),
 ("Crazyland","Zaandam","NL","Noord-Holland","Party","https://crazyland.org/agenda/",52.44,4.83,"Sexy parties and the Crazy Wonderland festival."),
@@ -27,7 +26,7 @@ P=[ # name, city, country, region, category, url, lat, lng, desc
 ("Club Amai","Meer","BE","Antwerpen","Club","https://www.clubamai.be/agenda",51.45,4.74,"Club for couples and single women meeting single men."),
 ("Bornedries","Sint-Truiden","BE","Limburg (BE)","Club","https://www.bornedries.be/upcoming-events/",50.82,5.19,"Large couples club with 22 themed rooms, wellness and disco."),
 ("Euphoria","Dendermonde","BE","Oost-Vlaanderen","Sauna","https://www.erosauna-euphoria.be/",51.03,4.10,"Private wellness on the Schelde with sauna, hammam, pool and jacuzzi. 21+."),
-("Acanthus","Erpe-Mere (to check)","BE","Oost-Vlaanderen","Club","https://www.acanthus.be/",50.93,3.97,"Private erotic club with dance evenings for singles and couples."),
+("Acanthus","Harelbeke (Hulste)","BE","West-Vlaanderen","Club","https://www.acanthus.be/",50.89,3.29,"Private erotic club with dance evenings for singles and couples."),
 ("Fetish Club 78","Belgium","BE",None,"Club","https://fetishclub78.be/calendar/",None,None,"Volunteer-run BDSM association with play evenings."),
 ]
 V={p[0]:p for p in P}

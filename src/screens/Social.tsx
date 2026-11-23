@@ -60,6 +60,7 @@ const Agenda: React.FC<{ place: Place }> = ({ place }) => {
               className="flex gap-4 py-3.5"
             >
               <div className="w-12 text-center font-serif leading-none shrink-0">
+                <small className="block text-[11px] uppercase text-muted font-sans mb-0.5">{d.toLocaleDateString('en', { weekday: 'short' })}</small>
                 <b className="block text-[28px] text-rouge font-semibold">{d.getDate()}</b>
                 <small className="text-[11px] uppercase text-muted font-sans">{d.toLocaleDateString('en', { month: 'short' })}</small>
               </div>
