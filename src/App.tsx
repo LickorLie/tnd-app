@@ -10,35 +10,47 @@ import Social from './screens/Social';
 import Deals from './screens/Deals';
 import More from './screens/More';
 import { GameLevel, GameTheme, Player, Question } from './types';
-import { selectQuestion, resetSeenQuestions } from './utils/questionSelector';
+import { selectQuestion, resetSeenQuestions, getSeenQuestions, setSeenQuestions } from './utils/questionSelector';
+import { loadGame, saveGame, clearGame } from './utils/gameSession';
+import CookieBanner from './components/CookieBanner';
+
+const restored = loadGame();
+if (restored) setSeenQuestions(restored.seen);
 import { usePlace } from './utils/geo';
 import { track } from './utils/analytics';
 const App: React.FC = () => {
   const [ageConfirmed, setAgeConfirmed] = useState<boolean>(() => {
     try { return localStorage.getItem('age_confirmed') === '1'; } catch { return false; }
   });
-  const [showInitialAd, setShowInitialAd] = useState(true);
-  const [gameType, setGameType] = useState<'truth' | 'dare' | null>(null);
-  const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
+  const [showInitialAd, setShowInitialAd] = useState(!restored);
+  const [gameType, setGameType] = useState<'truth' | 'dare' | null>(restored?.gameType ?? null);
+  const [currentQuestion, setCurrentQuestion] = useState<Question | null>(restored?.currentQuestion ?? null);
   const [players, setPlayers] = useState<Player[]>(() => {
+    if (restored) return restored.players;
     try {
       const saved = JSON.parse(localStorage.getItem('players') || '[]');
       return Array.isArray(saved) ? saved.map((p: Player) => ({ ...p, questionsAnswered: 0, jokersLeft: 1, passesLeft: 2 })) : [];
     } catch { return []; }
   });
-  const [currentPlayerIndex, setCurrentPlayerIndex] = useState<number>(0);
+  const [currentPlayerIndex, setCurrentPlayerIndex] = useState<number>(restored?.currentPlayerIndex ?? 0);
   const [activeTab, setActiveTab] = useState<Tab>('play');
   const [place, setPlace] = usePlace();
   const [levelToast, setLevelToast] = useState<GameLevel | null>(null);
   const [showHeadsUp, setShowHeadsUp] = useState<boolean>(() => { try { return localStorage.getItem('headsup_seen') !== '1'; } catch { return true; } });
-  const [gameLevel, setGameLevel] = useState<GameLevel>('Sweet');
-  const [gameTheme, setGameTheme] = useState<GameTheme>('friends');
-  const [gameStartTime, setGameStartTime] = useState<number | null>(null);
-  const [isGameActive, setIsGameActive] = useState<boolean>(false);
+  const [gameLevel, setGameLevel] = useState<GameLevel>(restored?.gameLevel ?? 'Sweet');
+  const [gameTheme, setGameTheme] = useState<GameTheme>(restored?.gameTheme ?? 'friends');
+  const [gameStartTime, setGameStartTime] = useState<number | null>(restored?.gameStartTime ?? null);
+  const [isGameActive, setIsGameActive] = useState<boolean>(restored?.isGameActive ?? false);
   const [countdown, setCountdown] = useState<number>(30);
   const [showShareMenu, setShowShareMenu] = useState<boolean>(false);
   const [showRules, setShowRules] = useState<boolean>(false);
-  const [showThemeSelection, setShowThemeSelection] = useState<boolean>(true);
+  const [showThemeSelection, setShowThemeSelection] = useState<boolean>(restored?.showThemeSelection ?? true);
+
+  // Lopend spel bewaren tegen per ongeluk verversen (zie utils/gameSession.ts)
+  useEffect(() => {
+    if (!isGameActive) return;
+    saveGame({ players, currentPlayerIndex, gameLevel, gameTheme, gameStartTime, isGameActive, gameType, currentQuestion, showThemeSelection, seen: getSeenQuestions() });
+  }, [players, currentPlayerIndex, gameLevel, gameTheme, gameStartTime, isGameActive, gameType, currentQuestion, showThemeSelection]);
   const [timerStarted, setTimerStarted] = useState<boolean>(false);
   useEffect(() => {
     if (isGameActive && gameStartTime) {
@@ -173,6 +185,7 @@ const App: React.FC = () => {
 
   const stopGame = () => {
     resetSeenQuestions();
+    clearGame();
     if (gameStartTime) {
       track('game_end', {
         theme: gameTheme,
@@ -315,6 +328,8 @@ const App: React.FC = () => {
         {activeTab === 'deals' && <Deals place={place} onPlace={setPlace} />}
         {activeTab === 'more' && <More />}
       </main>
+
+      <CookieBanner />
 
       {/* Menubalk: overal, behalve tijdens een lopend spel */}
       {!(activeTab === 'play' && inGame) && <TabBar active={activeTab} onChange={t => { setActiveTab(t); track('tab_open', { tab: t }); }} />}

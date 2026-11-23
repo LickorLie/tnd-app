@@ -78,7 +78,7 @@ const Agenda: React.FC<{ place: Place }> = ({ place }) => {
 type PollRow = { id: string; question: string; options: string[] };
 
 const Poll: React.FC = () => {
-  const rows = useRows<PollRow>('polls', q => q.eq('active', true).order('starts_at', { ascending: false }).limit(1));
+  const rows = useRows<PollRow>('polls', q => q.eq('active', true).lte('starts_at', new Date().toISOString()).order('starts_at', { ascending: false }).limit(1));
   const poll = rows?.[0];
   const key = poll ? `poll_${poll.id}` : '';
   const [voted, setVoted] = useState<number | null>(null);
@@ -132,7 +132,7 @@ const Poll: React.FC = () => {
           );
         })}
       </div>
-      {voted !== null && <p className="text-[13px] text-muted mt-3">{total} votes · anonymous</p>}
+      {voted !== null && <p className="text-[13px] text-muted mt-3">Anonymous</p>}
     </div>
   );
 };

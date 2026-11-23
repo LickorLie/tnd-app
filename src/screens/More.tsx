@@ -61,7 +61,8 @@ const Adults: React.FC = () => (
 const Privacy: React.FC = () => (
   <div className="space-y-3 text-[16px] leading-relaxed">
     <p>Player names, genders and orientations stay on your device. We never store them.</p>
-    <p className="text-muted">We use Google Analytics to count anonymous game events (for example: a game started, a level was reached). To show deals and events near you, we read only your country from your connection; your chosen region stays on your device. Messages you send through the contact form are only used to reply to you.</p>
+    <p><button onClick={() => window.dispatchEvent(new Event('open-cookie-settings'))} className="underline underline-offset-4 font-medium">Cookie settings 🍪</button></p>
+    <p className="text-muted">With your permission we use Google Analytics cookies to count anonymous game events (for example: a game started, a level was reached). To show deals and events near you, we read only your country from your connection; your chosen region stays on your device. Messages you send through the contact form are only used to reply to you.</p>
   </div>
 );
 
