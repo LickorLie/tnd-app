@@ -87,7 +87,8 @@ export function matchesPlace(item: Located, place: Place) {
   if (place.lat != null && place.lng != null) {
     const d = itemDistance(item, place);
     if (d !== null) return !place.radius || d <= place.radius;
-    // Items zonder coördinaten (bv. deals): op land/regio, zoals hieronder
+    // Zonder coördinaten (geheime locatie, deals): tonen als het land klopt
+    return !item.country || !place.country || item.country === place.country;
   }
   if (!item.country) return true;
   if (!place.country) return true;
