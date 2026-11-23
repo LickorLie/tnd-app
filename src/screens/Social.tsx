@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ChevronLeft, ExternalLink, MapPin } from 'lucide-react';
 import { supabase } from '../utils/supabase';
 import { track } from '../utils/analytics';
-import { Place, matchesPlace } from '../utils/geo';
+import { Place, matchesPlace, itemDistance, formatTrip } from '../utils/geo';
 import { Btn, Pill, Segmented, ScreenTitle } from '../components/ui';
 import PlaceChip from '../components/PlaceChip';
 
@@ -37,16 +37,18 @@ const Empty: React.FC<{ children: React.ReactNode }> = ({ children }) => (
 );
 
 /* ---------- Agenda ---------- */
-type EventRow = { id: string; title: string; starts_at: string; city: string | null; country: string | null; region: string | null; venue: string | null; category: string | null; url: string | null; featured: boolean };
+type EventRow = { id: string; title: string; starts_at: string; city: string | null; country: string | null; region: string | null; venue: string | null; category: string | null; url: string | null; featured: boolean; lat: number | null; lng: number | null };
 
 const Agenda: React.FC<{ place: Place }> = ({ place }) => {
   const rows = useRows<EventRow>('events', q => q.eq('active', true).gte('starts_at', new Date(Date.now() - 864e5).toISOString()).order('starts_at'));
   if (!rows) return <Empty>Loading…</Empty>;
   const list = rows.filter(r => matchesPlace(r, place));
-  if (!list.length) return <Empty>No events in your region yet. Check back soon 📅</Empty>;
+  if (!list.length) return <Empty>{place.lat != null ? 'Nothing within this distance yet. Try a bigger radius 📍' : 'No events in your region yet. Check back soon 📅'}</Empty>;
+  const near = place.lat != null;
   return (
     <ul className="divide-y divide-sand">
       {list.map(e => {
+        const km = itemDistance(e, place);
         const d = new Date(e.starts_at);
         return (
           <li key={e.id}>
@@ -63,7 +65,8 @@ const Agenda: React.FC<{ place: Place }> = ({ place }) => {
               </div>
               <div className="flex-1">
                 <div className="font-semibold">{e.title} {e.featured && <Pill className="ml-1">Featured</Pill>}</div>
-                <div className="text-[13px] text-muted">{[e.venue, e.city, e.category].filter(Boolean).join(' · ')}</div>
+                <div className="text-[13px] text-muted">{[e.venue, e.city, !near && e.region, e.category].filter(Boolean).join(' · ')}</div>
+                {km !== null && <div className="text-[13px] font-semibold text-rouge mt-0.5">{formatTrip(km)}</div>}
               </div>
               {e.url && <ExternalLink size={16} strokeWidth={1.5} className="text-muted mt-1" />}
             </a>
@@ -138,17 +141,25 @@ const Poll: React.FC = () => {
 };
 
 /* ---------- Clubs & plekken ---------- */
-type PlaceRow = { id: string; name: string; city: string | null; country: string | null; region: string | null; category: string | null; url: string | null; description: string | null; featured: boolean };
+type PlaceRow = { id: string; name: string; city: string | null; country: string | null; region: string | null; category: string | null; url: string | null; description: string | null; featured: boolean; lat: number | null; lng: number | null };
 
 const Clubs: React.FC<{ place: Place }> = ({ place }) => {
   const rows = useRows<PlaceRow>('places', q => q.eq('active', true).order('featured', { ascending: false }).order('name'));
   if (!rows) return <Empty>Loading…</Empty>;
+  const near = place.lat != null;
   const list = rows.filter(r => matchesPlace(r, place));
-  if (!list.length) return <Empty>Clubs and places in your region are coming soon 📍</Empty>;
+  if (!list.length) return <Empty>{near ? 'No clubs within this distance yet. Try a bigger radius 📍' : 'Clubs and places in your region are coming soon 📍'}</Empty>;
+  // Met plaats: dichtstbijzijnde eerst. Zonder plaats: per land en regio gegroepeerd.
+  const sorted = near
+    ? [...list].sort((a, b) => (itemDistance(a, place) ?? 1e9) - (itemDistance(b, place) ?? 1e9))
+    : [...list].sort((a, b) => (a.country || '').localeCompare(b.country || '') || (a.region || '').localeCompare(b.region || '') || a.name.localeCompare(b.name));
   return (
     <ul className="space-y-3">
-      {list.map(p => (
+      {sorted.map((p, i) => (
         <li key={p.id}>
+          {!near && (i === 0 || sorted[i - 1].region !== p.region) && (
+            <p className="text-[13px] font-semibold tracking-[0.08em] uppercase text-rouge mt-5 mb-2 first:mt-0">{p.region || 'Other'}{p.country === 'BE' ? ' · BE' : ''}</p>
+          )}
           <a href={p.url || undefined} target="_blank" rel="noopener noreferrer" onClick={() => track('place_click', { place: p.name })}
             className="block bg-paper ring-1 ring-inset ring-sand rounded-card p-4">
             <div className="flex items-start justify-between gap-2">
@@ -156,6 +167,7 @@ const Clubs: React.FC<{ place: Place }> = ({ place }) => {
               {p.featured && <Pill tone="sand">Partner</Pill>}
             </div>
             <div className="text-[13px] text-muted flex items-center gap-1 mt-0.5"><MapPin size={13} strokeWidth={1.5} />{[p.city, p.category].filter(Boolean).join(' · ')}</div>
+            {itemDistance(p, place) !== null && <div className="text-[13px] font-semibold text-rouge mt-0.5">{formatTrip(itemDistance(p, place)!)}</div>}
             {p.description && <p className="text-[15px] mt-2">{p.description}</p>}
           </a>
         </li>
