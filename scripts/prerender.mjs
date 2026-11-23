@@ -4,7 +4,7 @@
 import { mkdirSync, writeFileSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 
-const SITE = 'https://lickorlie.com';
+const SITE = 'https://www.lickorlie.com';
 const DIST = 'dist';
 const src = readFileSync('src/utils/supabase.ts', 'utf8');
 const SB_URL = src.match(/https:\/\/[a-z0-9]+\.supabase\.co/)?.[0];
