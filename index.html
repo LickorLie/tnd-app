@@ -17,6 +17,12 @@
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
+  // Consent Mode v2: niets opslaan tot de speler kiest (zie CookieBanner)
+  var c = null; try { c = localStorage.getItem('cookie_consent'); } catch (e) {}
+  gtag('consent', 'default', {
+    analytics_storage: c === 'all' ? 'granted' : 'denied',
+    ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied'
+  });
   gtag('js', new Date());
 
   gtag('config', 'G-LL5231WNKR');

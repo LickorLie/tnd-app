@@ -10,6 +10,8 @@
   --lvl-1: #D9C7B8; --lvl-2: #D98C8C; --lvl-3: #B43A3A; --lvl-4: #7A0C14;
 }
 html, body, #root { height: 100%; }
+/* Geen 'trek omlaag om te verversen' (iOS 16+/Android), zodat een spel niet per ongeluk wegvalt */
+html, body { overscroll-behavior-y: none; }
 body { margin: 0; background: var(--cream); color: var(--ink); font-family: Inter, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
 /* Vult precies het scherm, ook op mobiel met adresbalk */
 .h-screen-safe { height: 100vh; height: 100dvh; }

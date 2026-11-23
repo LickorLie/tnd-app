@@ -34,6 +34,8 @@ const getPoolWithFallback = (theme: GameTheme, gameLevel: GameLevel, type: Quest
 // Cards already shown this session; reset when a pool runs out or a game stops.
 const seen = new Set<string>();
 export const resetSeenQuestions = () => seen.clear();
+export const getSeenQuestions = () => Array.from(seen);
+export const setSeenQuestions = (list: string[]) => { seen.clear(); list.forEach(t => seen.add(t)); };
 
 const pickRandom = (list: Question[]): Question | null => {
   if (list.length === 0) return null;
