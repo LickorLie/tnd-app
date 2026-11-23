@@ -1,0 +1,117 @@
+-- Partyagenda + clubs, verzameld bij de bron (sites van clubs/organisatoren), 23 nov 2026.
+-- Alleen feiten (naam, datum, plaats) in eigen woorden + link naar de organisator.
+-- Coördinaten = centrum van de plaats (afgerond), voor 'afstand vanaf jou'.
+-- Veilig opnieuw uit te voeren: vervangt eerder geïmporteerde rijen (source = 'bron').
+begin;
+alter table public.events add column if not exists lat double precision;
+alter table public.events add column if not exists lng double precision;
+alter table public.events add column if not exists source text;
+alter table public.places add column if not exists lat double precision;
+alter table public.places add column if not exists lng double precision;
+alter table public.places add column if not exists source text;
+
+delete from public.events where source = 'bron';
+delete from public.places where source = 'bron';
+
+insert into public.places (name, city, country, region, category, url, description, lat, lng, source) values
+('Club Le Baron', 'Heerewaarden', 'NL', 'Gelderland', 'Club', 'https://www.clublebaron.nl/agenda/', 'Couples club open every day, themed days and evenings.', '51.82', '5.39', 'bron'),
+('Ultimate Dream', 'Beek en Donk', 'NL', 'Noord-Brabant', 'Club', 'https://www.ultimate-dream.nl/agenda-ud/', 'Swingers and BDSM club between Eindhoven and Helmond, with restaurant and whirlpools.', '51.53', '5.63', 'bron'),
+('Fata Morgana', 'Muiden', 'NL', 'Noord-Holland', 'Club', 'https://www.fata-morgana.nl/', 'Converted farmhouse on three floors with restaurant, sauna and whirlpool. No single men.', '52.33', '5.07', 'bron'),
+('Fun4Two', 'Moordrecht', 'NL', 'Zuid-Holland', 'Club', 'https://www.fun4two.nl/programma/index.html', 'All-inclusive luxury club with restaurant, wellness and themed nights.', '51.99', '4.67', 'bron'),
+('Club Organza', 'Breukelen', 'NL', 'Utrecht', 'Club', 'https://www.cluborganza.nl/', 'Dance-oriented club with a party atmosphere.', '52.17', '5.0', 'bron'),
+('Club Showboat', 'Zaandijk', 'NL', 'Noord-Holland', 'Club', 'https://www.showboat.eu/events', 'Swingers club on a boat, all-in food and drinks, themed evenings.', '52.47', '4.81', 'bron'),
+('Sauna Javali', 'Heerhugowaard', 'NL', 'Noord-Holland', 'Sauna', 'https://www.saunajavali.nl/events/categorie/aankomende/', 'Wellness with saunas, hammam, lounges, bar and garden.', '52.67', '4.83', 'bron'),
+('Club Paradise', 'Amsterdam', 'NL', 'Noord-Holland', 'Club', 'https://club-paradise.nl/events/', 'Amsterdam club with sauna, steam bath, dance floor and play areas.', '52.39', '4.89', 'bron'),
+('Sameplace', 'Amsterdam', 'NL', 'Noord-Holland', 'Bar', 'https://sameplace.nl/agenda/', 'Erotic café since 1997 with bar, dance floor and basement play rooms.', '52.37', '4.87', 'bron'),
+('Eroroma', 'Zwinderen', 'NL', 'Drenthe', 'Club', 'https://eroroma.nl/pages/nl/de-parenclub.php', 'Couples club with Roman bath theme and jacuzzis.', '52.7', '6.68', 'bron'),
+('Kasteel Waterloo', 'Swalmen (approx.)', 'NL', 'Limburg', 'Club', 'https://kasteelwaterloo.nl/', 'Erotic club in Midden-Limburg for couples, singles and trios.', '51.23', '6.03', 'bron'),
+('Pleasure2gether', 'Limburg', 'NL', 'Limburg', 'Club', 'https://www.pleasure2gether.nl/kalender.php', 'Couples and singles club with bar, relax rooms and weekend buffet.', null, null, 'bron'),
+('Stiletto-Club', 'Tilburg', 'NL', 'Noord-Brabant', 'Party', 'https://www.stiletto-club.nl/', 'Themed party nights at DHG Tilburg.', '51.56', '5.09', 'bron'),
+('Kinky On The Beach', 'Culemborg', 'NL', 'Gelderland', 'Party', 'https://www.kinkyonthebeach.eu/site/', 'Kinky parties with strict leather, latex and rubber dress code.', '51.95', '5.23', 'bron'),
+('Crazyland', 'Zaandam', 'NL', 'Noord-Holland', 'Party', 'https://crazyland.org/agenda/', 'Sexy parties and the Crazy Wonderland festival.', '52.44', '4.83', 'bron'),
+('Wasteland', 'Amsterdam', 'NL', 'Noord-Holland', 'Party', 'https://www.wasteland.nl/', 'International fetish and fantasy party with art, fashion and music.', '52.39', '4.85', 'bron'),
+('Madame Homard', 'Secret locations', 'NL', null, 'Party', 'https://madamehomard.nl/evenementen/', 'Sensual dance parties at secret locations across Europe.', null, null, 'bron'),
+('Be Privileged', 'Secret location', 'NL', 'Noord-Holland', 'Party', 'https://www.beprivileged.nl/events/', 'Members community with themed events at secret locations.', null, null, 'bron'),
+('Big Little Secrets', 'Amsterdam', 'NL', 'Noord-Holland', 'Party', 'https://biglittle-secrets.nl/events/', 'Intimate adults-only get-togethers at special locations.', '52.37', '4.9', 'bron'),
+('Caviar de la Nuit', 'Secret locations', 'BE', null, 'Party', 'https://www.caviardelanuit.com/events', 'Application-only community for couples, events at historic venues.', null, null, 'bron'),
+('Club Luxoria', 'Wagenborgen', 'NL', 'Groningen', 'Club', null, 'Welcoming club, used to German-speaking guests.', '53.25', '6.94', 'bron'),
+('Club Monique', 'Wieringerwerf', 'NL', 'Noord-Holland', 'Club', null, 'Locally oriented social club.', '52.85', '5.03', 'bron'),
+('Club Mystique', 'Rucphen', 'NL', 'Noord-Brabant', 'Club', null, 'Social club with a regional focus.', '51.53', '4.56', 'bron'),
+('Club Eroxx', 'Balen', 'BE', 'Antwerpen', 'Club', 'https://eroxx.be/pages/events', 'Club for couples and adults with themed parties.', '51.17', '5.17', 'bron'),
+('Club Amai', 'Meer', 'BE', 'Antwerpen', 'Club', 'https://www.clubamai.be/agenda', 'Club for couples and single women meeting single men.', '51.45', '4.74', 'bron'),
+('Bornedries', 'Sint-Truiden', 'BE', 'Limburg (BE)', 'Club', 'https://www.bornedries.be/upcoming-events/', 'Large couples club with 22 themed rooms, wellness and disco.', '50.82', '5.19', 'bron'),
+('Euphoria', 'Dendermonde', 'BE', 'Oost-Vlaanderen', 'Sauna', 'https://www.erosauna-euphoria.be/', 'Private wellness on the Schelde with sauna, hammam, pool and jacuzzi. 21+.', '51.03', '4.1', 'bron'),
+('Acanthus', 'Erpe-Mere (to check)', 'BE', 'Oost-Vlaanderen', 'Club', 'https://www.acanthus.be/', 'Private erotic club with dance evenings for singles and couples.', '50.93', '3.97', 'bron'),
+('Fetish Club 78', 'Belgium', 'BE', null, 'Club', 'https://fetishclub78.be/calendar/', 'Volunteer-run BDSM association with play evenings.', null, null, 'bron');
+
+insert into public.events (title, starts_at, venue, city, country, region, category, url, lat, lng, source) values
+('Date4Fun', '2026-11-24 11:00:00+01', 'Club Le Baron', 'Heerewaarden', 'NL', 'Gelderland', 'Club', 'https://www.clublebaron.nl/agenda/', '51.82', '5.39', 'bron'),
+('Massage evening', '2026-11-25 19:00:00+01', 'Pleasure2gether', 'Limburg', 'NL', 'Limburg', 'Club', 'https://www.pleasure2gether.nl/kalender.php', null, null, 'bron'),
+('Kinky Bi & Travestie', '2026-11-25 20:00:00+01', 'Club Amai', 'Meer', 'BE', 'Antwerpen', 'Club', 'https://www.clubamai.be/evenement/bi-en-travestie', '51.45', '4.74', 'bron'),
+('Nina & Friends', '2026-11-26 11:30:00+01', 'Club Eroxx', 'Balen', 'BE', 'Antwerpen', 'Club', 'https://eroxx.be/pages/events/1737', '51.17', '5.17', 'bron'),
+('NaughtyThursday', '2026-11-26 19:00:00+01', 'Euphoria', 'Dendermonde', 'BE', 'Oost-Vlaanderen', 'Sauna', 'https://www.erosauna-euphoria.be/details-en-registratie/naughtythursday-2026-11-26-19-00', '51.03', '4.1', 'bron'),
+('Doendersdag', '2026-11-26 20:00:00+01', 'Club Amai', 'Meer', 'BE', 'Antwerpen', 'Club', 'https://www.clubamai.be/evenement/doendersdag', '51.45', '4.74', 'bron'),
+('Mixed evening', '2026-11-27 17:00:00+01', 'Sauna Javali', 'Heerhugowaard', 'NL', 'Noord-Holland', 'Sauna', 'https://www.saunajavali.nl/event/vrijdag-27-november-2026-gemengde-avond/', '52.67', '4.83', 'bron'),
+('Hoerenfuif', '2026-11-27 19:00:00+01', 'Bornedries', 'Sint-Truiden', 'BE', 'Limburg (BE)', 'Club', 'https://www.bornedries.be/event/hoerenfuif-november/', '50.82', '5.19', 'bron'),
+('FlirtyFriday', '2026-11-27 19:00:00+01', 'Euphoria', 'Dendermonde', 'BE', 'Oost-Vlaanderen', 'Sauna', 'https://www.erosauna-euphoria.be/details-en-registratie/flirtyfriday-2026-11-27-19-00', '51.03', '4.1', 'bron'),
+('Sinterklaas party', '2026-11-27 20:00:00+01', 'Pleasure2gether', 'Limburg', 'NL', 'Limburg', 'Club', 'https://www.pleasure2gether.nl/kalender.php', null, null, 'bron'),
+('Sexy Burlesque Party', '2026-11-27 20:00:00+01', 'Club Eroxx', 'Balen', 'BE', 'Antwerpen', 'Club', 'https://eroxx.be/pages/events/1736', '51.17', '5.17', 'bron'),
+('Friday Pleasure Night', '2026-11-27 21:00:00+01', 'Fata Morgana', 'Muiden', 'NL', 'Noord-Holland', 'Club', 'https://www.fata-morgana.nl/', '52.33', '5.07', 'bron'),
+('S(E)xpert Night', '2026-11-27 21:00:00+01', 'Fun4Two', 'Moordrecht', 'NL', 'Zuid-Holland', 'Club', 'https://www.fun4two.nl/programma/index.html', '51.99', '4.67', 'bron'),
+('After Three', '2026-11-27 21:00:00+01', 'Club Paradise', 'Amsterdam', 'NL', 'Noord-Holland', 'Club', 'https://club-paradise.nl/events/after-three-12/', '52.39', '4.89', 'bron'),
+('Slutty Friday', '2026-11-27 21:00:00+01', 'Club Amai', 'Meer', 'BE', 'Antwerpen', 'Club', 'https://www.clubamai.be/evenement/sluttyfriday5', '51.45', '4.74', 'bron'),
+('Mixed day', '2026-11-28 12:00:00+01', 'Sauna Javali', 'Heerhugowaard', 'NL', 'Noord-Holland', 'Sauna', 'https://www.saunajavali.nl/event/zaterdag-28-november-2026-gemengde-dag/', '52.67', '4.83', 'bron'),
+('Soirée Deluxe', '2026-11-28 19:00:00+01', 'Club Eroxx', 'Balen', 'BE', 'Antwerpen', 'Club', 'https://eroxx.be/pages/events/1738', '51.17', '5.17', 'bron'),
+('Newbie Night', '2026-11-28 19:00:00+01', 'Bornedries', 'Sint-Truiden', 'BE', 'Limburg (BE)', 'Club', 'https://www.bornedries.be/event/newbie-night-november/', '50.82', '5.19', 'bron'),
+('SexySaturdayEvening', '2026-11-28 19:00:00+01', 'Euphoria', 'Dendermonde', 'BE', 'Oost-Vlaanderen', 'Sauna', 'https://www.erosauna-euphoria.be/details-en-registratie/sexysaturdayevening-2026-11-28-19-00', '51.03', '4.1', 'bron'),
+('Sinterklaas party', '2026-11-28 20:00:00+01', 'Pleasure2gether', 'Limburg', 'NL', 'Limburg', 'Club', 'https://www.pleasure2gether.nl/kalender.php', null, null, 'bron'),
+('Eyes Wide Shut · Royal Edition', '2026-11-28 21:00:00+01', 'Madame Homard', 'Secret locations', 'NL', null, 'Party', 'https://madamehomard.nl/event/ews_royal/', null, null, 'bron'),
+('Hot Erotic Mega Party', '2026-11-28 21:00:00+01', 'Fata Morgana', 'Muiden', 'NL', 'Noord-Holland', 'Club', 'https://www.fata-morgana.nl/', '52.33', '5.07', 'bron'),
+('Weekend night', '2026-11-28 21:00:00+01', 'Fun4Two', 'Moordrecht', 'NL', 'Zuid-Holland', 'Club', 'https://www.fun4two.nl/programma/index.html', '51.99', '4.67', 'bron'),
+('Neon Legends', '2026-11-28 21:00:00+01', 'Club Paradise', 'Amsterdam', 'NL', 'Noord-Holland', 'Club', 'https://club-paradise.nl/events/neon-legends/', '52.39', '4.89', 'bron'),
+('Wasteland Amsterdam', '2026-11-28 22:00:00+01', 'Wasteland', 'Amsterdam', 'NL', 'Noord-Holland', 'Party', 'https://www.wasteland.nl/wasteland-amsterdam/', '52.39', '4.85', 'bron'),
+('Topless Sunday', '2026-11-29 14:00:00+01', 'Club Eroxx', 'Balen', 'BE', 'Antwerpen', 'Club', 'https://eroxx.be/pages/events/1719', '51.17', '5.17', 'bron'),
+('Hot Afternoon Chillax', '2026-11-29 14:00:00+01', 'Euphoria', 'Dendermonde', 'BE', 'Oost-Vlaanderen', 'Sauna', 'https://www.erosauna-euphoria.be/details-en-registratie/hot-afternoon-chillax-2026-11-29-14-00', '51.03', '4.1', 'bron'),
+('Ibiza Feel the Vibe', '2026-11-29 15:00:00+01', 'Club Paradise', 'Amsterdam', 'NL', 'Noord-Holland', 'Club', 'https://club-paradise.nl/events/ibiza-feel-the-vibe/', '52.39', '4.89', 'bron'),
+('Rewind', '2026-11-29 15:00:00+01', 'Bornedries', 'Sint-Truiden', 'BE', 'Limburg (BE)', 'Club', 'https://www.bornedries.be/event/rewind-november-29/', '50.82', '5.19', 'bron'),
+('Dragtastic Night', '2026-11-29 16:00:00+01', 'Fun4Two', 'Moordrecht', 'NL', 'Zuid-Holland', 'Club', 'https://www.fun4two.nl/fun4two-dragtasticnight_26.html', '51.99', '4.67', 'bron'),
+('Masquerade Extreme Edition', '2026-12-03 11:30:00+01', 'Club Eroxx', 'Balen', 'BE', 'Antwerpen', 'Club', 'https://eroxx.be/pages/events/1747', '51.17', '5.17', 'bron'),
+('NaughtyThursday', '2026-12-03 19:00:00+01', 'Euphoria', 'Dendermonde', 'BE', 'Oost-Vlaanderen', 'Sauna', 'https://www.erosauna-euphoria.be/details-en-registratie/naughtythursday-2026-12-03-19-00', '51.03', '4.1', 'bron'),
+('Ladies Night Closing', '2026-12-03 20:00:00+01', 'Fun4Two', 'Moordrecht', 'NL', 'Zuid-Holland', 'Club', 'https://www.fun4two.nl/programma/index.html#ladies', '51.99', '4.67', 'bron'),
+('The Lingerie Unwrap Party', '2026-12-04 17:00:00+01', 'Sauna Javali', 'Heerhugowaard', 'NL', 'Noord-Holland', 'Sauna', 'https://www.saunajavali.nl/event/vrijdag-4-december-2026-the-lingerie-unwrap-party-sauna-javali/', '52.67', '4.83', 'bron'),
+('FlirtyFriday', '2026-12-04 19:00:00+01', 'Euphoria', 'Dendermonde', 'BE', 'Oost-Vlaanderen', 'Sauna', 'https://www.erosauna-euphoria.be/details-en-registratie/flirtyfriday-2026-12-04-19-00', '51.03', '4.1', 'bron'),
+('Hardcore Night', '2026-12-04 21:00:00+01', 'Fun4Two', 'Moordrecht', 'NL', 'Zuid-Holland', 'Club', 'https://www.fun4two.nl/fun4two-hardcore-night-26/fun4two-hardcore-night-index.html', '51.99', '4.67', 'bron'),
+('After Three', '2026-12-04 21:00:00+01', 'Club Paradise', 'Amsterdam', 'NL', 'Noord-Holland', 'Club', 'https://club-paradise.nl/events/after-three-13/', '52.39', '4.89', 'bron'),
+('Saturday', '2026-12-05 12:00:00+01', 'Sauna Javali', 'Heerhugowaard', 'NL', 'Noord-Holland', 'Sauna', 'https://www.saunajavali.nl/event/zaterdag-05-december-2026/', '52.67', '4.83', 'bron'),
+('SexySaturdayEvening', '2026-12-05 19:00:00+01', 'Euphoria', 'Dendermonde', 'BE', 'Oost-Vlaanderen', 'Sauna', 'https://www.erosauna-euphoria.be/details-en-registratie/sexysaturdayevening-2026-12-05-19-00', '51.03', '4.1', 'bron'),
+('Pakjesavond', '2026-12-05 20:00:00+01', 'Kinky On The Beach', 'Culemborg', 'NL', 'Gelderland', 'Party', 'https://www.kinkyonthebeach.eu/site/events/kinky-on-the-beach-pakjesavond-2026/', '51.95', '5.23', 'bron'),
+('Couples Paradise · Stoute Klaas', '2026-12-05 21:00:00+01', 'Club Paradise', 'Amsterdam', 'NL', 'Noord-Holland', 'Club', 'https://club-paradise.nl/events/couples-paradise-stoute-klaas-2/', '52.39', '4.89', 'bron'),
+('Hot Afternoon Chillax', '2026-12-06 14:00:00+01', 'Euphoria', 'Dendermonde', 'BE', 'Oost-Vlaanderen', 'Sauna', 'https://www.erosauna-euphoria.be/details-en-registratie/hot-afternoon-chillax-2026-12-06-14-00', '51.03', '4.1', 'bron'),
+('Afterglow in Paradise', '2026-12-06 15:00:00+01', 'Club Paradise', 'Amsterdam', 'NL', 'Noord-Holland', 'Club', 'https://club-paradise.nl/events/afterglow-in-paradise-9/', '52.39', '4.89', 'bron'),
+('NaughtyThursday', '2026-12-10 19:00:00+01', 'Euphoria', 'Dendermonde', 'BE', 'Oost-Vlaanderen', 'Sauna', 'https://www.erosauna-euphoria.be/details-en-registratie/naughtythursday-2026-12-10-19-00', '51.03', '4.1', 'bron'),
+('FlirtyFriday', '2026-12-11 19:00:00+01', 'Euphoria', 'Dendermonde', 'BE', 'Oost-Vlaanderen', 'Sauna', 'https://www.erosauna-euphoria.be/details-en-registratie/flirtyfriday-2026-12-11-19-00', '51.03', '4.1', 'bron'),
+('After Three · Christmas Vibes', '2026-12-11 21:00:00+01', 'Club Paradise', 'Amsterdam', 'NL', 'Noord-Holland', 'Club', 'https://club-paradise.nl/events/after-three-christmas-vibes/', '52.39', '4.89', 'bron'),
+('SexySaturdayEvening', '2026-12-12 19:00:00+01', 'Euphoria', 'Dendermonde', 'BE', 'Oost-Vlaanderen', 'Sauna', 'https://www.erosauna-euphoria.be/details-en-registratie/sexysaturdayevening-2026-12-12-19-00', '51.03', '4.1', 'bron'),
+('Unbound', '2026-12-12 21:00:00+01', 'Be Privileged', 'Secret location', 'NL', 'Noord-Holland', 'Party', 'https://www.beprivileged.nl/events/unbound/', null, null, 'bron'),
+('31st Anniversary · One Night Only', '2026-12-12 21:00:00+01', 'Fun4Two', 'Moordrecht', 'NL', 'Zuid-Holland', 'Club', 'https://www.fun4two.nl/fun4two-31-anniversary_26.html', '51.99', '4.67', 'bron'),
+('Couples Paradise · Celebrations', '2026-12-12 21:00:00+01', 'Club Paradise', 'Amsterdam', 'NL', 'Noord-Holland', 'Club', 'https://club-paradise.nl/events/couples-paradise-celebrations/', '52.39', '4.89', 'bron'),
+('Hot Afternoon Chillax', '2026-12-13 14:00:00+01', 'Euphoria', 'Dendermonde', 'BE', 'Oost-Vlaanderen', 'Sauna', 'https://www.erosauna-euphoria.be/details-en-registratie/hot-afternoon-chillax-2026-12-13-14-00', '51.03', '4.1', 'bron'),
+('Afterglow · Christmas Glow', '2026-12-13 15:00:00+01', 'Club Paradise', 'Amsterdam', 'NL', 'Noord-Holland', 'Club', 'https://club-paradise.nl/events/afterglow-christmas-glow/', '52.39', '4.89', 'bron'),
+('NaughtyThursday', '2026-12-17 19:00:00+01', 'Euphoria', 'Dendermonde', 'BE', 'Oost-Vlaanderen', 'Sauna', 'https://www.erosauna-euphoria.be/details-en-registratie/naughtythursday-2026-12-17-19-00', '51.03', '4.1', 'bron'),
+('Dark & Naked by Candlelight', '2026-12-18 19:00:00+01', 'Euphoria', 'Dendermonde', 'BE', 'Oost-Vlaanderen', 'Sauna', 'https://www.erosauna-euphoria.be/details-en-registratie/dark-naked-by-candlelight-13', '51.03', '4.1', 'bron'),
+('After Three · Gold Edition', '2026-12-18 21:00:00+01', 'Club Paradise', 'Amsterdam', 'NL', 'Noord-Holland', 'Club', 'https://club-paradise.nl/events/after-three-gold-edition/', '52.39', '4.89', 'bron'),
+('SexySaturdayEvening', '2026-12-19 19:00:00+01', 'Euphoria', 'Dendermonde', 'BE', 'Oost-Vlaanderen', 'Sauna', 'https://www.erosauna-euphoria.be/details-en-registratie/sexysaturdayevening-2026-12-19-19-00', '51.03', '4.1', 'bron'),
+('Couples Paradise · Gold Edition', '2026-12-19 21:00:00+01', 'Club Paradise', 'Amsterdam', 'NL', 'Noord-Holland', 'Club', 'https://club-paradise.nl/events/couples-paradise-gold-edition/', '52.39', '4.89', 'bron'),
+('Hot Afternoon Chillax', '2026-12-20 14:00:00+01', 'Euphoria', 'Dendermonde', 'BE', 'Oost-Vlaanderen', 'Sauna', 'https://www.erosauna-euphoria.be/details-en-registratie/hot-afternoon-chillax-2026-12-20-14-00', '51.03', '4.1', 'bron'),
+('Afterglow · Christmas Glow', '2026-12-20 15:00:00+01', 'Club Paradise', 'Amsterdam', 'NL', 'Noord-Holland', 'Club', 'https://club-paradise.nl/events/afterglow-christmas-glow-2/', '52.39', '4.89', 'bron'),
+('Christmas Party', '2026-12-25 19:00:00+01', 'Euphoria', 'Dendermonde', 'BE', 'Oost-Vlaanderen', 'Sauna', 'https://www.erosauna-euphoria.be/details-en-registratie/christmasparty', '51.03', '4.1', 'bron'),
+('Christmas Party', '2026-12-26 18:00:00+01', 'Fun4Two', 'Moordrecht', 'NL', 'Zuid-Holland', 'Club', 'https://www.fun4two.nl/fun4two-christmas-party_26.html', '51.99', '4.67', 'bron'),
+('NYE Glitter Ball', '2026-12-31 21:00:00+01', 'Fun4Two', 'Moordrecht', 'NL', 'Zuid-Holland', 'Club', 'https://www.fun4two.nl/fun4two-glitterball_26.html', '51.99', '4.67', 'bron'),
+('The Fetish Edition', '2026-12-31 21:00:00+01', 'Stiletto-Club', 'Tilburg', 'NL', 'Noord-Brabant', 'Party', 'https://www.stiletto-club.nl/fetish-party/', '51.56', '5.09', 'bron'),
+('Booming Sexy New Year', '2027-01-09 21:00:00+01', 'Crazyland', 'Zaandam', 'NL', 'Noord-Holland', 'Party', 'https://crazyland.org/events/booming-sexy-new-year-09-01-2027/', '52.44', '4.83', 'bron'),
+('B.I.T.C.H. 25 Year Anniversary', '2027-01-16 21:00:00+01', 'Crazyland', 'Zaandam', 'NL', 'Noord-Holland', 'Party', 'https://crazyland.org/events/b-i-t-c-h-16-01-2027/', '52.44', '4.83', 'bron'),
+('To the Maxxx', '2027-03-13 20:00:00+01', 'Kinky On The Beach', 'Culemborg', 'NL', 'Gelderland', 'Party', 'https://www.kinkyonthebeach.eu/site/events/13032027-tothemaxx/', '51.95', '5.23', 'bron'),
+('Eyes Wide Shut · Guilty Pleasures', '2027-03-20 21:00:00+01', 'Madame Homard', 'Secret locations', 'NL', null, 'Party', 'https://madamehomard.nl/event/eyes-wide-shut-guilty-pleasures/', null, null, 'bron'),
+('Summerfest', '2027-07-03 14:00:00+01', 'Wasteland', 'Amsterdam', 'NL', 'Noord-Holland', 'Party', 'https://www.wasteland.nl/wasteland-summerfest/', '52.39', '4.85', 'bron');
+
+commit;
