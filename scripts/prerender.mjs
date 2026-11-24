@@ -57,7 +57,7 @@ function layout({ path, title, description, body, jsonld = [] }) {
 <title>${esc(title)}</title><meta name="description" content="${esc(description)}">
 <link rel="canonical" href="${url}"><meta name="rating" content="adult">
 <meta property="og:type" content="website"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${url}"><meta property="og:site_name" content="Lick or Lie">
-<meta name="theme-color" content="#FBF6F1"><link rel="icon" href="/assets/favicon.ico">
+<meta name="theme-color" content="#FBF6F1"><link rel="icon" href="/favicon.ico" sizes="48x48"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><meta property="og:image" content="${SITE}/og-image.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;600&display=swap" rel="stylesheet">
 <style>${CSS}</style>
 ${jsonld.map(j => `<script type="application/ld+json">${JSON.stringify(j)}</script>`).join('')}
